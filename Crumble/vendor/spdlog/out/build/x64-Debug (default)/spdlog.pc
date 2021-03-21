@@ -1,0 +1,6 @@
+prefix=C:/dev/Hazel/Hazel/vendor/spdlog/out/install/x64-Debug (default)
+includedir=${prefix}/include
+
+Name: spdlog
+Description: Super fast C++ logging library. 
+Version: 1.3.0
