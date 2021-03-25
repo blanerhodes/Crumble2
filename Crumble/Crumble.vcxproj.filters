@@ -123,6 +123,9 @@
     <ClInclude Include="src\Crumble\Renderer\Renderer.h">
       <Filter>src\Crumble\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Crumble\Renderer\Renderer2D.h">
+      <Filter>src\Crumble\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Crumble\Renderer\RendererAPI.h">
       <Filter>src\Crumble\Renderer</Filter>
     </ClInclude>
@@ -1284,6 +1287,9 @@
       <Filter>src\Crumble\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Crumble\Renderer\Renderer.cpp">
+      <Filter>src\Crumble\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Crumble\Renderer\Renderer2D.cpp">
       <Filter>src\Crumble\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Crumble\Renderer\RendererAPI.cpp">

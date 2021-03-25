@@ -17,6 +17,7 @@
 
 // ---Renderer------------------------
 #include "Crumble/Renderer/Renderer.h"
+#include "Crumble/Renderer/Renderer2D.h"
 #include "Crumble/Renderer/RenderCommand.h"
 
 #include "Crumble/Renderer/Buffer.h"
@@ -25,8 +26,4 @@
 #include "Crumble/Renderer/VertexArray.h"
 
 #include "Crumble/Renderer/OrthographicCamera.h"
-// -----------------------------------
-
-// ---Entry Point---------------------
-#include "Crumble/Core/EntryPoint.h"
 // -----------------------------------
