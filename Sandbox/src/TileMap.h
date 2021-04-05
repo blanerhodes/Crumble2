@@ -2,27 +2,26 @@
 
 #include "Crumble.h"
 
-class TileMap : public Crumble::Layer
+
+//TODO: zoom camera out
+//TODO: add water tiles around perimeter
+//TODO: pair number textures and robber with tile textures
+//TODO:
+
+class TileMap
 {
 public:
-	TileMap();
+	TileMap() {};
 	virtual ~TileMap() = default;
 
-	virtual void OnAttach() override;
-	virtual void OnDetach() override;
-	virtual void OnUpdate(Crumble::Timestep ts) override;
-	virtual void OnImGuiRender() override;
-	virtual void OnEvent(Crumble::Event& event) override;
+	void Init();
+	void OnRender();
+	
+	void OnUpdate(Crumble::Timestep ts);
+	void OnImGuiRender();
+	void OnEvent(Crumble::Event& event);
 
-	bool OnWindowResize(Crumble::WindowResizeEvent& e);
-	bool OnMouseButtonPressed(Crumble::MouseButtonPressedEvent& e);
 private:
-	void CreateCamera(uint32_t width, uint32_t height);
-private:
-	Crumble::OrthographicCameraController m_CameraController;
-	Crumble::Scope<Crumble::OrthographicCamera> m_Camera;
-	//ImFont* m_Font;
-
 	Crumble::Ref<Crumble::VertexArray> m_SquareVA;
 	Crumble::Ref<Crumble::Texture2D> m_BrickTile;
 	Crumble::Ref<Crumble::Texture2D> m_SandTile;
@@ -31,10 +30,25 @@ private:
 	Crumble::Ref<Crumble::Texture2D> m_WaterTile;
 	Crumble::Ref<Crumble::Texture2D> m_WheatTile;
 	Crumble::Ref<Crumble::Texture2D> m_WoodTile;
+
+	Crumble::Ref<Crumble::Texture2D> m_Token2;
+	Crumble::Ref<Crumble::Texture2D> m_Token3;
+	Crumble::Ref<Crumble::Texture2D> m_Token4;
+	Crumble::Ref<Crumble::Texture2D> m_Token5;
+	Crumble::Ref<Crumble::Texture2D> m_Token6;
+	Crumble::Ref<Crumble::Texture2D> m_Token7;
+	Crumble::Ref<Crumble::Texture2D> m_Token8;
+	Crumble::Ref<Crumble::Texture2D> m_Token9;
+	Crumble::Ref<Crumble::Texture2D> m_Token10;
+	Crumble::Ref<Crumble::Texture2D> m_Token11;
+	Crumble::Ref<Crumble::Texture2D> m_Token12;
+	Crumble::Ref<Crumble::Texture2D> m_Robber;
+
 	Crumble::Ref<Crumble::Shader> m_FlatColorShader;
 
 	Crumble::Ref<Crumble::Texture2D> m_Checkerboard;
 	std::vector<Crumble::Ref<Crumble::Texture2D>> m_Tiles;
+	std::vector<Crumble::Ref<Crumble::Texture2D>> m_Tokens;
 
 };
 

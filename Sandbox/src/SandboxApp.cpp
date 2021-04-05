@@ -2,7 +2,8 @@
 #include <Crumble/Core/EntryPoint.h>
 
 #include "Sandbox2D.h"
-#include "TileMap.h"
+#include "GameLayer.h"
+#include "CardsLayer.h"
 
 #include "Platform/OpenGL/OpenGLShader.h"
 
@@ -212,7 +213,8 @@ public:
 	{
 		//PushLayer(new ExampleLayer());
 		//PushLayer(new Sandbox2D());
-		PushLayer(new TileMap());
+		PushLayer(new GameLayer());
+		//PushLayer(new CardsLayer());
 	}
 
 	~Sandbox()

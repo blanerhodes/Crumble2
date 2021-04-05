@@ -3,35 +3,36 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include <random>
+#include "Random.h"
 
 using namespace Crumble;
 
-struct TileValuePair
+
+
+void TileMap::Init()
 {
-	Ref<Texture2D> tile;
-	Ref<Texture2D> value;
-};
+	m_Checkerboard = Texture2D::Create("assets/textures/Checkerboard.png");
 
-TileMap::TileMap()
-	: Layer("TileMap"), m_CameraController(1280.0f / 720.0f)
-{
-	auto& window = Crumble::Application::Get().GetWindow();
-	CreateCamera(window.GetWidth(), window.GetHeight());
+	m_BrickTile = Texture2D::Create("assets/textures/BrickTile.png");
+	m_SandTile = Texture2D::Create("assets/textures/SandTile.png");
+	m_SheepTile = Texture2D::Create("assets/textures/SheepTile.png");
+	m_StoneTile = Texture2D::Create("assets/textures/StoneTile.png");
+	m_WaterTile = Texture2D::Create("assets/textures/WaterTile.png");
+	m_WheatTile = Texture2D::Create("assets/textures/WheatTile.png");
+	m_WoodTile = Texture2D::Create("assets/textures/WoodTile.png");
 
-}
-
-void TileMap::OnAttach()
-{
-	m_Checkerboard = Crumble::Texture2D::Create("assets/textures/Checkerboard.png");
-
-	m_BrickTile = Crumble::Texture2D::Create("assets/textures/BrickTile.png");
-	m_SandTile = Crumble::Texture2D::Create("assets/textures/SandTile.png");
-	m_SheepTile = Crumble::Texture2D::Create("assets/textures/SheepTile.png");
-	m_StoneTile = Crumble::Texture2D::Create("assets/textures/StoneTile.png");
-	m_WaterTile = Crumble::Texture2D::Create("assets/textures/WaterTile.png");
-	m_WheatTile = Crumble::Texture2D::Create("assets/textures/WheatTile.png");
-	m_WoodTile = Crumble::Texture2D::Create("assets/textures/WoodTile.png");
+	m_Token2 = Texture2D::Create("assets/textures/Token2.png");
+	m_Token3 = Texture2D::Create("assets/textures/Token3.png");
+	m_Token4 = Texture2D::Create("assets/textures/Token4.png");
+	m_Token5 = Texture2D::Create("assets/textures/Token5.png");
+	m_Token6 = Texture2D::Create("assets/textures/Token6.png");
+	m_Token7 = Texture2D::Create("assets/textures/Token7.png");
+	m_Token8 = Texture2D::Create("assets/textures/Token8.png");
+	m_Token9 = Texture2D::Create("assets/textures/Token9.png");
+	m_Token10 = Texture2D::Create("assets/textures/Token10.png");
+	m_Token11 = Texture2D::Create("assets/textures/Token11.png");
+	m_Token12 = Texture2D::Create("assets/textures/Token12.png");
+	m_Robber = Texture2D::Create("assets/textures/ChernoLogo.png");
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -44,116 +45,169 @@ void TileMap::OnAttach()
 		m_Tiles.push_back(m_BrickTile);
 		m_Tiles.push_back(m_StoneTile);
 	}
-	m_Tiles.push_back(m_SandTile);
+
+	//1: 2 12
+	//2: 11 4 8 10 9 3 5 6
+	m_Tokens.push_back(m_Token2);
+	m_Tokens.push_back(m_Token12);
+	for (int i = 0; i < 2; i++)
+	{
+		m_Tokens.push_back(m_Token3);
+		m_Tokens.push_back(m_Token4);
+		m_Tokens.push_back(m_Token5);
+		m_Tokens.push_back(m_Token6);
+		m_Tokens.push_back(m_Token8);
+		m_Tokens.push_back(m_Token9);
+		m_Tokens.push_back(m_Token10);
+		m_Tokens.push_back(m_Token11);
+	}
 
 	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 	shuffle(m_Tiles.begin(), m_Tiles.end(), std::default_random_engine(seed));
+	shuffle(m_Tokens.begin(), m_Tokens.end(), std::default_random_engine(seed));
+
+	int insertPoint = Random::Float() * (m_Tiles.size() - 1);
+	m_Tiles.emplace(m_Tiles.begin() + insertPoint, m_SandTile);
+	m_Tokens.emplace(m_Tokens.begin() + insertPoint, m_Robber);
 }
 
-void TileMap::OnDetach()
+void TileMap::OnUpdate(Timestep ts)
 {
+	
+
 }
 
-void TileMap::OnUpdate(Crumble::Timestep ts)
+void TileMap::OnRender()
 {
-	// Update
-	m_CameraController.OnUpdate(ts);
-
-	// Render
-	Crumble::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
-	Crumble::RenderCommand::Clear();
-
-	Crumble::Renderer2D::BeginScene(m_CameraController.GetCamera());
-	/*Crumble::Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, { 0.8f, 0.2, 0.3f, 1.0f });
-	Crumble::Renderer2D::DrawRotatedQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, glm::radians(45.0f), { 0.8f, 0.2, 0.3f, 1.0f });
-	Crumble::Renderer2D::DrawQuad({ 0.5f, -0.5f }, { 0.5f, 0.75f }, { 0.2f, 0.3f, 0.8f, 1.0f });*/
-
-	glm::vec2 standardSize = glm::vec2(1.0f);
-	float currX = 0;
-	float currY = 0;
+	glm::vec2 standardTileSize = glm::vec2(3.0f);
+	glm::vec2 standardTokenSize = glm::vec2(1.0f);
+	float tileOffsetX = 2.1f;
+	float tileOffsetY = 1.8f;
+	float xStart = -6.0f;
+	float yStart = 6.5f;
+	float currX;
+	float currY = yStart;
 	float currZ = 0;
-	int row = 1;
+	unsigned int row = 1;
+
+	//top water row
+	currX = xStart + tileOffsetX / 2;
+	for (int k = 0; k < 4; k++)
+	{
+		currZ += 0.01;
+		currX += tileOffsetX;
+		Renderer2D::DrawQuad({ currX, currY, currZ }, standardTileSize, m_WaterTile);
+	}
+
+	//2nd row
 	int i = 0;
+	currX = xStart + tileOffsetX;
+	currY = yStart - tileOffsetY * row++;
+	Renderer2D::DrawQuad({ currX, currY, currZ }, standardTileSize, m_WaterTile);
 	for (; i < 3; i++)
 	{
-		Crumble::Renderer2D::DrawQuad({ currX, currY, currZ }, standardSize, m_Tiles.at(i));
 		currZ += 0.01;
-		currX += 0.7;
+		currX += tileOffsetX;
+		Renderer2D::DrawQuad({ currX, currY, currZ }, standardTileSize, m_Tiles.at(i));
+		currZ += 0.01;
+		Renderer2D::DrawQuad({ currX, currY - 0.5f, currZ }, standardTokenSize, m_Tokens.at(i));
 	}
+	currX += tileOffsetX;
+	currZ += 0.01;
+	Renderer2D::DrawQuad({ currX, currY, currZ }, standardTileSize, m_WaterTile);
+	currZ += 0.01;
 
-	currX = 0 - 0.35;
-	currY = -0.6f;
+	//3rd row
+	currX = xStart + tileOffsetX / 2;
+	currY = yStart - tileOffsetY * row++;
+	Renderer2D::DrawQuad({ currX, currY, currZ }, standardTileSize, m_WaterTile);
 	for (; i < 7; i++)
 	{
-		Crumble::Renderer2D::DrawQuad({ currX, currY, currZ }, standardSize, m_Tiles.at(i));
 		currZ += 0.01;
-		currX += 0.7;
+		currX += tileOffsetX;
+		Renderer2D::DrawQuad({ currX, currY, currZ }, standardTileSize, m_Tiles.at(i));
+		currZ += 0.01;
+		Renderer2D::DrawQuad({ currX, currY - 0.5f, currZ }, standardTokenSize, m_Tokens.at(i));
 	}
+	currX += tileOffsetX;
+	currZ += 0.01;
+	Renderer2D::DrawQuad({ currX, currY, currZ }, standardTileSize, m_WaterTile);
+	currZ += 0.01;
 
-	currX = 0 - 0.35 * 2;
-	currY = -0.6f * 2;
+	//4th row (central row)
+	currX = xStart;
+	currY = yStart - tileOffsetY * row++;
+	Renderer2D::DrawQuad({ currX, currY, currZ }, standardTileSize, m_WaterTile);
 	for (; i < 12; i++)
 	{
-		Crumble::Renderer2D::DrawQuad({ currX, currY, currZ }, standardSize, m_Tiles.at(i));
 		currZ += 0.01;
-		currX += 0.7;
+		currX += tileOffsetX;
+		Renderer2D::DrawQuad({ currX, currY, currZ }, standardTileSize, m_Tiles.at(i));
+		currZ += 0.01;
+		Renderer2D::DrawQuad({ currX, currY - 0.5f, currZ }, standardTokenSize, m_Tokens.at(i));
+		
 	}
+	currX += tileOffsetX;
+	currZ += 0.01;
+	Renderer2D::DrawQuad({ currX, currY, currZ }, standardTileSize, m_WaterTile);
+	currZ += 0.01;
 
-	currX = 0 - 0.35;
-	currY = -0.6f * 3;
+	//5th row
+	currX = xStart + tileOffsetX / 2;
+	currY = yStart - tileOffsetY * row++;
+	Renderer2D::DrawQuad({ currX, currY, currZ }, standardTileSize, m_WaterTile);
+	currZ += 0.01;
 	for (; i < 16; i++)
 	{
-		Crumble::Renderer2D::DrawQuad({ currX, currY, currZ }, standardSize, m_Tiles.at(i));
 		currZ += 0.01;
-		currX += 0.7;
+		currX += tileOffsetX;
+		Renderer2D::DrawQuad({ currX, currY, currZ }, standardTileSize, m_Tiles.at(i));	
+		currZ += 0.01;
+		Renderer2D::DrawQuad({ currX, currY - 0.5f, currZ }, standardTokenSize, m_Tokens.at(i));
 	}
+	currX += tileOffsetX;
+	currZ += 0.01;
+	Renderer2D::DrawQuad({ currX, currY, currZ }, standardTileSize, m_WaterTile);
+	currZ += 0.01;
 
-	currX = 0;
-	currY = -0.6f * 4;
+	//6th row
+	currX = xStart + tileOffsetX;
+	currY = yStart - tileOffsetY * row++;
+	Renderer2D::DrawQuad({ currX, currY, currZ }, standardTileSize, m_WaterTile);
+	currZ += 0.01;
 	for (; i < m_Tiles.size(); i++)
 	{
-		Crumble::Renderer2D::DrawQuad({ currX, currY, currZ }, standardSize, m_Tiles.at(i));
 		currZ += 0.01;
-		currX += 0.7;
+		currX += tileOffsetX;
+		Renderer2D::DrawQuad({ currX, currY, currZ }, standardTileSize, m_Tiles.at(i));
+		currZ += 0.01;
+		Renderer2D::DrawQuad({ currX, currY - 0.5f, currZ }, standardTokenSize, m_Tokens.at(i));
+	}
+	currX += tileOffsetX;
+	currZ += 0.01;
+	Renderer2D::DrawQuad({ currX, currY, currZ }, standardTileSize, m_WaterTile);
+	currZ += 0.01;
+
+	//bottom water row
+	currX = xStart + tileOffsetX / 2;
+	currY = yStart - tileOffsetY * row++;
+	for (int k = 0; k < 4; k++)
+	{
+		currZ += 0.01;
+		currX += tileOffsetX;
+		Renderer2D::DrawQuad({ currX, currY, currZ }, standardTileSize, m_WaterTile);
 	}
 
-
-	/*Crumble::Renderer2D::DrawQuad({ 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, m_StoneTile);
-	Crumble::Renderer2D::DrawQuad({ 0.7f, 0.0f, 0.1f}, { 1.0f, 1.0f }, m_WoodTile);
-	Crumble::Renderer2D::DrawQuad({ 0.35f, 0.6f, 0.2f }, { 1.0f, 1.0f }, m_SheepTile);*/
-
-	Crumble::Renderer2D::DrawRotatedQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, glm::radians(45.0f), m_Checkerboard, 10.0f, glm::vec4(1.0f, 0.9f, 0.9f, 1.0f));
-
-	Crumble::Renderer2D::EndScene();
-
+	Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, glm::vec2(20.0f), m_Checkerboard, 10.0f, glm::vec4(1.0f, 0.9f, 0.9f, 1.0f));
 }
+
 
 void TileMap::OnImGuiRender()
 {
-	ImGui::Begin("Settings");
-	//ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SquareColor));
-	ImGui::End();
+	
 }
 
-void TileMap::OnEvent(Crumble::Event& e)
+void TileMap::OnEvent(Event& e)
 {
-	m_CameraController.OnEvent(e);
-}
-
-bool TileMap::OnWindowResize(Crumble::WindowResizeEvent& e)
-{
-	CreateCamera(e.GetWidth(), e.GetHeight());
-	return false;
-}
-
-void TileMap::CreateCamera(uint32_t width, uint32_t height)
-{
-	float aspectRatio = (float)width / (float)height;
-
-	float camWidth = 8.0f;
-	float bottom = -camWidth;
-	float top = camWidth;
-	float left = bottom * aspectRatio;
-	float right = top * aspectRatio;
-	m_Camera = Crumble::CreateScope<Crumble::OrthographicCamera>(left, right, bottom, top);
+	
 }
