@@ -32,7 +32,7 @@ void TileMap::Init()
 	m_Token10 = Texture2D::Create("assets/textures/Token10.png");
 	m_Token11 = Texture2D::Create("assets/textures/Token11.png");
 	m_Token12 = Texture2D::Create("assets/textures/Token12.png");
-	m_Robber = Texture2D::Create("assets/textures/ChernoLogo.png");
+	m_Robber = Texture2D::Create("assets/textures/robber.png");
 
 	for (int i = 0; i < 4; i++)
 	{
