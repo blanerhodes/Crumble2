@@ -77,12 +77,15 @@ void TileMap::OnUpdate(Timestep ts)
 
 }
 
-void TileMap::OnRender()
+void TileMap::OnRender(std::vector<std::vector<CrossPoint>>& nodeMap)
 {
 	glm::vec2 standardTileSize = glm::vec2(3.0f);
 	glm::vec2 standardTokenSize = glm::vec2(1.0f);
+	glm::vec2 testTokenSize = glm::vec2(0.25f);
 	float tileOffsetX = 2.1f;
 	float tileOffsetY = 1.8f;
+	float tileYMidpoint = tileOffsetY * 0.66f;
+	float tokenYMidpoint = tileYMidpoint + 0.5f;
 	float xStart = -6.0f;
 	float yStart = 6.5f;
 	float currX;
@@ -91,7 +94,21 @@ void TileMap::OnRender()
 	unsigned int row = 1;
 
 	//top water row
+	for (auto& vec: nodeMap)
+	{
+		for(auto& node: vec)
+		{ 
+			if(node.position.x != -17.0f)
+				Renderer2D::DrawQuad(node.position, testTokenSize, m_Token2);
+		}
+
+	}
+
 	currX = xStart + tileOffsetX / 2;
+	/*Renderer2D::DrawQuad({ currX + tileOffsetX, currY + tileOffsetY * 0.66f, currZ+1 }, testTokenSize, m_Token9);
+	Renderer2D::DrawQuad({ currX + tileOffsetX / 2, currY + tileOffsetY / 3, currZ + 1 }, testTokenSize, m_Token8);
+	Renderer2D::DrawQuad({ currX + tileOffsetX * 1.5f, currY - tileOffsetY / 3, currZ + 1 }, testTokenSize, m_Token8);*/
+
 	for (int k = 0; k < 4; k++)
 	{
 		currZ += 0.01;
@@ -101,16 +118,18 @@ void TileMap::OnRender()
 
 	//2nd row
 	int i = 0;
+	int vertIter = 0;
 	currX = xStart + tileOffsetX;
 	currY = yStart - tileOffsetY * row++;
 	Renderer2D::DrawQuad({ currX, currY, currZ }, standardTileSize, m_WaterTile);
-	for (; i < 3; i++)
+	for (; i < 3; i++, vertIter++)
 	{
 		currZ += 0.01;
 		currX += tileOffsetX;
-		Renderer2D::DrawQuad({ currX, currY, currZ }, standardTileSize, m_Tiles.at(i));
+		glm::vec3 currPos = nodeMap.at(vertIter).at(0).position;
+		Renderer2D::DrawQuad({ currPos.x, currPos.y - tileYMidpoint, currZ }, standardTileSize, m_Tiles.at(i));
 		currZ += 0.01;
-		Renderer2D::DrawQuad({ currX, currY - 0.5f, currZ }, standardTokenSize, m_Tokens.at(i));
+		Renderer2D::DrawQuad({ currPos.x, currPos.y - tokenYMidpoint, currZ }, standardTokenSize, m_Tokens.at(i));
 	}
 	currX += tileOffsetX;
 	currZ += 0.01;
@@ -121,13 +140,14 @@ void TileMap::OnRender()
 	currX = xStart + tileOffsetX / 2;
 	currY = yStart - tileOffsetY * row++;
 	Renderer2D::DrawQuad({ currX, currY, currZ }, standardTileSize, m_WaterTile);
-	for (; i < 7; i++)
+	for (; i < 7; i++, vertIter++)
 	{
 		currZ += 0.01;
 		currX += tileOffsetX;
-		Renderer2D::DrawQuad({ currX, currY, currZ }, standardTileSize, m_Tiles.at(i));
+		glm::vec3 currPos = nodeMap.at(vertIter).at(0).position;
+		Renderer2D::DrawQuad({ currPos.x, currPos.y - tileYMidpoint, currZ }, standardTileSize, m_Tiles.at(i));
 		currZ += 0.01;
-		Renderer2D::DrawQuad({ currX, currY - 0.5f, currZ }, standardTokenSize, m_Tokens.at(i));
+		Renderer2D::DrawQuad({ currPos.x, currPos.y - tokenYMidpoint, currZ }, standardTokenSize, m_Tokens.at(i));
 	}
 	currX += tileOffsetX;
 	currZ += 0.01;
@@ -138,13 +158,14 @@ void TileMap::OnRender()
 	currX = xStart;
 	currY = yStart - tileOffsetY * row++;
 	Renderer2D::DrawQuad({ currX, currY, currZ }, standardTileSize, m_WaterTile);
-	for (; i < 12; i++)
+	for (; i < 12; i++, vertIter++)
 	{
 		currZ += 0.01;
 		currX += tileOffsetX;
-		Renderer2D::DrawQuad({ currX, currY, currZ }, standardTileSize, m_Tiles.at(i));
+		glm::vec3 currPos = nodeMap.at(vertIter).at(0).position;
+		Renderer2D::DrawQuad({ currPos.x, currPos.y - tileYMidpoint, currZ }, standardTileSize, m_Tiles.at(i));
 		currZ += 0.01;
-		Renderer2D::DrawQuad({ currX, currY - 0.5f, currZ }, standardTokenSize, m_Tokens.at(i));
+		Renderer2D::DrawQuad({ currPos.x, currPos.y - tokenYMidpoint, currZ }, standardTokenSize, m_Tokens.at(i));
 		
 	}
 	currX += tileOffsetX;
@@ -159,11 +180,16 @@ void TileMap::OnRender()
 	currZ += 0.01;
 	for (; i < 16; i++)
 	{
-		currZ += 0.01;
-		currX += tileOffsetX;
-		Renderer2D::DrawQuad({ currX, currY, currZ }, standardTileSize, m_Tiles.at(i));	
-		currZ += 0.01;
-		Renderer2D::DrawQuad({ currX, currY - 0.5f, currZ }, standardTokenSize, m_Tokens.at(i));
+		if (nodeMap.at(vertIter).at(1).position.x != -17.0f || nodeMap.at(vertIter).at(3).position.x != -17.0f)
+		{
+			currZ += 0.01;
+			currX += tileOffsetX;
+			glm::vec3 currPos = nodeMap.at(vertIter).at(0).position;
+			Renderer2D::DrawQuad({ currPos.x, currPos.y - tileYMidpoint, currZ }, standardTileSize, m_Tiles.at(i));
+			currZ += 0.01;
+			Renderer2D::DrawQuad({ currPos.x, currPos.y - tokenYMidpoint, currZ }, standardTokenSize, m_Tokens.at(i));
+			vertIter++;
+		}
 	}
 	currX += tileOffsetX;
 	currZ += 0.01;
@@ -175,13 +201,14 @@ void TileMap::OnRender()
 	currY = yStart - tileOffsetY * row++;
 	Renderer2D::DrawQuad({ currX, currY, currZ }, standardTileSize, m_WaterTile);
 	currZ += 0.01;
-	for (; i < m_Tiles.size(); i++)
+	for (; i < m_Tiles.size(); i++, vertIter++)
 	{
 		currZ += 0.01;
 		currX += tileOffsetX;
-		Renderer2D::DrawQuad({ currX, currY, currZ }, standardTileSize, m_Tiles.at(i));
+		glm::vec3 currPos = nodeMap.at(vertIter).at(0).position;
+		Renderer2D::DrawQuad({ currPos.x, currPos.y - tileYMidpoint, currZ }, standardTileSize, m_Tiles.at(i));
 		currZ += 0.01;
-		Renderer2D::DrawQuad({ currX, currY - 0.5f, currZ }, standardTokenSize, m_Tokens.at(i));
+		Renderer2D::DrawQuad({ currPos.x, currPos.y - tokenYMidpoint, currZ }, standardTokenSize, m_Tokens.at(i));
 	}
 	currX += tileOffsetX;
 	currZ += 0.01;

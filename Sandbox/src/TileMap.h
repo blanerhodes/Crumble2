@@ -1,12 +1,7 @@
 #pragma once
 
 #include "Crumble.h"
-
-
-//TODO: zoom camera out
-//TODO: add water tiles around perimeter
-//TODO: pair number textures and robber with tile textures
-//TODO:
+#include "CrossPoint.h"
 
 class TileMap
 {
@@ -15,7 +10,7 @@ public:
 	virtual ~TileMap() = default;
 
 	void Init();
-	void OnRender();
+	void OnRender(std::vector<std::vector<CrossPoint>>& nodeMap);
 	
 	void OnUpdate(Crumble::Timestep ts);
 	void OnImGuiRender();
