@@ -2,6 +2,25 @@
 
 #include "Crumble.h"
 #include "CrossPoint.h"
+#include "Player.h"
+
+struct HexNode
+{
+	Crumble::Ref<Crumble::Texture2D> texture;
+	Resource type;
+	glm::vec2 position;
+	uint8_t diceValue;
+
+	HexNode(Crumble::Ref<Crumble::Texture2D> tex, Resource rec = Resource::NONE, glm::vec2 pos = glm::vec2(1.0f),  uint8_t value = 0) : texture(tex), type(rec) {}
+};
+
+struct DiceValueNode
+{
+	Crumble::Ref<Crumble::Texture2D> texture;
+	uint8_t diceValue = 0;
+	DiceValueNode(Crumble::Ref<Crumble::Texture2D> tex, uint8_t val) : texture(tex), diceValue(val){}
+};
+
 
 class TileMap
 {
@@ -11,11 +30,12 @@ public:
 
 	void Init();
 	void OnRender(std::vector<CrossPoint>& nodeMap);
-	void RenderStructures(std::vector<CrossPoint>& nodeMap, std::vector<Structure>& player1, std::vector<Structure>& player2);
+	void RenderStructures(std::vector<CrossPoint>& nodeMap, std::vector<Crumble::Ref<Player>>& players);
 	
 	void OnUpdate(Crumble::Timestep ts);
 	void OnImGuiRender();
 	void OnEvent(Crumble::Event& event);
+	void GatherResources(std::vector<Crumble::Ref<Player>> players, uint32_t diceRoll);
 
 private:
 	Crumble::Ref<Crumble::VertexArray> m_SquareVA;
@@ -58,8 +78,8 @@ private:
 	Crumble::Ref<Crumble::Shader> m_FlatColorShader;
 
 	Crumble::Ref<Crumble::Texture2D> m_Checkerboard;
-	std::vector<Crumble::Ref<Crumble::Texture2D>> m_Tiles;
-	std::vector<Crumble::Ref<Crumble::Texture2D>> m_Tokens;
+	std::vector<HexNode> m_Tiles;
+	std::vector<DiceValueNode> m_Tokens;
 
 };
 

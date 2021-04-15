@@ -32,10 +32,11 @@ private:
 	Crumble::Scope<Crumble::OrthographicCamera> m_Camera;
 	TileMap m_TileMap;
 	std::vector<CrossPoint> m_NodeMap;
-	Crumble::Ref<Player> m_Player1;
-	Crumble::Ref<Player> m_Player2;
+	std::vector<Crumble::Ref<Player>> m_Players;
 	int m_CurrentPlayer = 0;
-	StructureType m_Selection = StructureType::ROAD;
+	uint32_t m_CurrentDiceRoll = 8;
+	bool m_RollState = false;
+	StructureType m_Selection = StructureType::CITY;
 	bool m_MouseState = true;
 
 	float m_AspectRatio;
@@ -48,5 +49,5 @@ private:
 	glm::vec4 m_MapFrame = glm::vec4({-6.0f, 6.0f, -6.5f, 6.5f});
 	glm::vec4 m_Player1CardsFrame = glm::vec4({ -14.0f, -5.5f, -7.9f, -6.4f });
 	glm::vec4 m_Player2CardsFrame = glm::vec4({ 5.5f, 14.0f, -7.9f, -6.4f });
-	//ImFont* m_Font;
+	
 };
