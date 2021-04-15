@@ -2,10 +2,28 @@
 
 #include "Crumble.h"
 
+struct Neighbor
+{
+	bool roaded = false;
+	glm::vec3 position;
+};
+
 struct CrossPoint
 {
-	bool leftRoaded = false;
-	bool rightRoaded = false;
-	bool verticalRoaded = false;
+	Neighbor leftNeighbor;
+	Neighbor rightNeighbor;
+	Neighbor vertNeighbor;
 	glm::vec3 position;
+};
+
+enum class StructureType
+{
+	NONE = -1, ROAD = 0, SETTLEMENT = 1, CITY = 2, ROAD_LEFT_UP = 3, ROAD_RIGHT_UP = 4, ROAD_VERTICAL = 5
+};
+
+struct Structure
+{
+	glm::vec3 position;
+	glm::vec3 nearestCrossPoint;
+	StructureType buildType = StructureType::NONE;
 };

@@ -34,6 +34,19 @@ void TileMap::Init()
 	m_Token12 = Texture2D::Create("assets/textures/Token12.png");
 	m_Robber = Texture2D::Create("assets/textures/robber.png");
 
+	m_BlueCity = Texture2D::Create("assets/textures/BlueCity.png");
+	m_BlueHorizontalRoad = Texture2D::Create("assets/textures/BlueHorizontalRoad.png"); //change to vertical
+	m_BlueRoadLeftUp = Texture2D::Create("assets/textures/BlueRoadLeftUp.png");
+	m_BlueRoadRightUp = Texture2D::Create("assets/textures/BlueRoadRightUp.png");
+	m_BlueSettlement = Texture2D::Create("assets/textures/BlueSettlement.png");
+	//m_BlueVerticalRoad  = Texture2D::Create("assets/textures/BlueRoadVertical.png");
+	m_RedCity = Texture2D::Create("assets/textures/RedCity.png");
+	m_RedHorizontalRoad = Texture2D::Create("assets/textures/RedHorizontalRoad.png");
+	m_RedRoadLeftUp = Texture2D::Create("assets/textures/RedRoadLeftUp.png");
+	m_RedRoadRightUp = Texture2D::Create("assets/textures/RedRoadRightUp.png");
+	m_RedSettlement = Texture2D::Create("assets/textures/RedSettlement.png");
+	//m_RedVerticalRoad = Texture2D::Create("assets/textures/RedRoadVertical.png");
+
 	for (int i = 0; i < 4; i++)
 	{
 		m_Tiles.push_back(m_WoodTile);
@@ -77,7 +90,7 @@ void TileMap::OnUpdate(Timestep ts)
 
 }
 
-void TileMap::OnRender(std::vector<std::vector<CrossPoint>>& nodeMap)
+void TileMap::OnRender(std::vector<CrossPoint>& nodeMap)
 {
 	glm::vec2 standardTileSize = glm::vec2(3.0f);
 	glm::vec2 standardTokenSize = glm::vec2(1.0f);
@@ -93,22 +106,15 @@ void TileMap::OnRender(std::vector<std::vector<CrossPoint>>& nodeMap)
 	float currZ = 0;
 	unsigned int row = 1;
 
+
+	//for (auto& node : nodeMap)
+	//{
+	//	//if (std::abs(node.position.x) - 17.0f < 0.0001 && std::abs(node.position.x) - 17.0f > -0.0001)
+	//		Renderer2D::DrawQuad(node.position, testTokenSize, m_Token2);
+	//}
+
 	//top water row
-	for (auto& vec: nodeMap)
-	{
-		for(auto& node: vec)
-		{ 
-			if(node.position.x != -17.0f)
-				Renderer2D::DrawQuad(node.position, testTokenSize, m_Token2);
-		}
-
-	}
-
 	currX = xStart + tileOffsetX / 2;
-	/*Renderer2D::DrawQuad({ currX + tileOffsetX, currY + tileOffsetY * 0.66f, currZ+1 }, testTokenSize, m_Token9);
-	Renderer2D::DrawQuad({ currX + tileOffsetX / 2, currY + tileOffsetY / 3, currZ + 1 }, testTokenSize, m_Token8);
-	Renderer2D::DrawQuad({ currX + tileOffsetX * 1.5f, currY - tileOffsetY / 3, currZ + 1 }, testTokenSize, m_Token8);*/
-
 	for (int k = 0; k < 4; k++)
 	{
 		currZ += 0.01;
@@ -126,7 +132,7 @@ void TileMap::OnRender(std::vector<std::vector<CrossPoint>>& nodeMap)
 	{
 		currZ += 0.01;
 		currX += tileOffsetX;
-		glm::vec3 currPos = nodeMap.at(vertIter).at(0).position;
+		glm::vec3 currPos = nodeMap.at(vertIter).position;
 		Renderer2D::DrawQuad({ currPos.x, currPos.y - tileYMidpoint, currZ }, standardTileSize, m_Tiles.at(i));
 		currZ += 0.01;
 		Renderer2D::DrawQuad({ currPos.x, currPos.y - tokenYMidpoint, currZ }, standardTokenSize, m_Tokens.at(i));
@@ -144,7 +150,7 @@ void TileMap::OnRender(std::vector<std::vector<CrossPoint>>& nodeMap)
 	{
 		currZ += 0.01;
 		currX += tileOffsetX;
-		glm::vec3 currPos = nodeMap.at(vertIter).at(0).position;
+		glm::vec3 currPos = nodeMap.at(vertIter).position;
 		Renderer2D::DrawQuad({ currPos.x, currPos.y - tileYMidpoint, currZ }, standardTileSize, m_Tiles.at(i));
 		currZ += 0.01;
 		Renderer2D::DrawQuad({ currPos.x, currPos.y - tokenYMidpoint, currZ }, standardTokenSize, m_Tokens.at(i));
@@ -162,7 +168,7 @@ void TileMap::OnRender(std::vector<std::vector<CrossPoint>>& nodeMap)
 	{
 		currZ += 0.01;
 		currX += tileOffsetX;
-		glm::vec3 currPos = nodeMap.at(vertIter).at(0).position;
+		glm::vec3 currPos = nodeMap.at(vertIter).position;
 		Renderer2D::DrawQuad({ currPos.x, currPos.y - tileYMidpoint, currZ }, standardTileSize, m_Tiles.at(i));
 		currZ += 0.01;
 		Renderer2D::DrawQuad({ currPos.x, currPos.y - tokenYMidpoint, currZ }, standardTokenSize, m_Tokens.at(i));
@@ -178,18 +184,22 @@ void TileMap::OnRender(std::vector<std::vector<CrossPoint>>& nodeMap)
 	currY = yStart - tileOffsetY * row++;
 	Renderer2D::DrawQuad({ currX, currY, currZ }, standardTileSize, m_WaterTile);
 	currZ += 0.01;
-	for (; i < 16; i++)
+	for (; i < 16; i++, vertIter++)
 	{
-		if (nodeMap.at(vertIter).at(1).position.x != -17.0f || nodeMap.at(vertIter).at(3).position.x != -17.0f)
+		CrossPoint currNode = nodeMap.at(vertIter);
+		bool badLeft = (std::abs(currNode.leftNeighbor.position.x) - 17.0f < 0.0001 && std::abs(currNode.leftNeighbor.position.x) - 17.0f > -0.0001);
+		bool badRight = (std::abs(currNode.rightNeighbor.position.x) - 17.0f < 0.0001 && std::abs(currNode.rightNeighbor.position.x) - 17.0f > -0.0001);
+		if (!badLeft && !badRight)
 		{
 			currZ += 0.01;
 			currX += tileOffsetX;
-			glm::vec3 currPos = nodeMap.at(vertIter).at(0).position;
+			glm::vec3 currPos = currNode.position;
 			Renderer2D::DrawQuad({ currPos.x, currPos.y - tileYMidpoint, currZ }, standardTileSize, m_Tiles.at(i));
 			currZ += 0.01;
 			Renderer2D::DrawQuad({ currPos.x, currPos.y - tokenYMidpoint, currZ }, standardTokenSize, m_Tokens.at(i));
-			vertIter++;
 		}
+		else
+			i--;
 	}
 	currX += tileOffsetX;
 	currZ += 0.01;
@@ -203,12 +213,21 @@ void TileMap::OnRender(std::vector<std::vector<CrossPoint>>& nodeMap)
 	currZ += 0.01;
 	for (; i < m_Tiles.size(); i++, vertIter++)
 	{
-		currZ += 0.01;
-		currX += tileOffsetX;
-		glm::vec3 currPos = nodeMap.at(vertIter).at(0).position;
-		Renderer2D::DrawQuad({ currPos.x, currPos.y - tileYMidpoint, currZ }, standardTileSize, m_Tiles.at(i));
-		currZ += 0.01;
-		Renderer2D::DrawQuad({ currPos.x, currPos.y - tokenYMidpoint, currZ }, standardTokenSize, m_Tokens.at(i));
+		CrossPoint currNode = nodeMap.at(vertIter);
+		bool badLeft = (std::abs(currNode.leftNeighbor.position.x) - 17.0f < 0.0001 && std::abs(currNode.leftNeighbor.position.x) - 17.0f > -0.0001);
+		bool badRight = (std::abs(currNode.rightNeighbor.position.x) - 17.0f < 0.0001 && std::abs(currNode.rightNeighbor.position.x) - 17.0f > -0.0001);
+
+		if (!badLeft && !badRight)
+		{
+			currZ += 0.01;
+			currX += tileOffsetX;
+			glm::vec3 currPos = currNode.position;
+			Renderer2D::DrawQuad({ currPos.x, currPos.y - tileYMidpoint, currZ }, standardTileSize, m_Tiles.at(i));
+			currZ += 0.01;
+			Renderer2D::DrawQuad({ currPos.x, currPos.y - tokenYMidpoint, currZ }, standardTokenSize, m_Tokens.at(i));
+		}
+		else
+			i--;
 	}
 	currX += tileOffsetX;
 	currZ += 0.01;
@@ -226,8 +245,60 @@ void TileMap::OnRender(std::vector<std::vector<CrossPoint>>& nodeMap)
 	}
 
 	Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, glm::vec2(20.0f), m_Checkerboard, 10.0f, glm::vec4(1.0f, 0.9f, 0.9f, 1.0f));
+
 }
 
+
+void TileMap::RenderStructures(std::vector<CrossPoint>& nodeMap, std::vector<Structure>& player1, std::vector<Structure>& player2)
+{
+	glm::vec2 standardTokenSize = glm::vec2(1.0f);
+	for (Structure& structure : player1)
+	{
+		switch (structure.buildType)
+		{
+		case StructureType::SETTLEMENT:
+			Renderer2D::DrawQuad(structure.position, standardTokenSize, m_RedSettlement);
+			break;
+		case StructureType::CITY:
+			Renderer2D::DrawQuad(structure.position, standardTokenSize, m_RedCity);
+			break;
+		case StructureType::ROAD_LEFT_UP:
+			Renderer2D::DrawQuad(structure.position, standardTokenSize, m_RedRoadLeftUp);
+			break;
+		case StructureType::ROAD_RIGHT_UP:
+			Renderer2D::DrawQuad(structure.position, standardTokenSize, m_RedRoadRightUp);
+			break;
+		case StructureType::ROAD_VERTICAL:
+			Renderer2D::DrawQuad(structure.position, standardTokenSize, m_RedHorizontalRoad); //needs to be vertical road when we get it
+			break;
+		default:
+			CR_ASSERT(false, "Bad Structure Value on TileMap render");
+		}
+	}
+
+	for (Structure& structure : player2)
+	{
+		switch (structure.buildType)
+		{
+		case StructureType::SETTLEMENT:
+			Renderer2D::DrawQuad(structure.position, standardTokenSize, m_BlueSettlement);
+			break;
+		case StructureType::CITY:
+			Renderer2D::DrawQuad(structure.position, standardTokenSize, m_BlueCity);
+			break;
+		case StructureType::ROAD_LEFT_UP:
+			Renderer2D::DrawQuad(structure.position, standardTokenSize, m_BlueRoadLeftUp);
+			break;
+		case StructureType::ROAD_RIGHT_UP:
+			Renderer2D::DrawQuad(structure.position, standardTokenSize, m_BlueRoadRightUp);
+			break;
+		case StructureType::ROAD_VERTICAL:
+			Renderer2D::DrawQuad(structure.position, standardTokenSize, m_BlueHorizontalRoad); //needs to be vertical road when we get it
+		default:
+			CR_ASSERT(false, "Bad Structure Value on TileMap render");
+		}
+	}
+}
 
 void TileMap::OnImGuiRender()
 {

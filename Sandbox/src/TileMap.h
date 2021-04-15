@@ -10,7 +10,8 @@ public:
 	virtual ~TileMap() = default;
 
 	void Init();
-	void OnRender(std::vector<std::vector<CrossPoint>>& nodeMap);
+	void OnRender(std::vector<CrossPoint>& nodeMap);
+	void RenderStructures(std::vector<CrossPoint>& nodeMap, std::vector<Structure>& player1, std::vector<Structure>& player2);
 	
 	void OnUpdate(Crumble::Timestep ts);
 	void OnImGuiRender();
@@ -38,6 +39,21 @@ private:
 	Crumble::Ref<Crumble::Texture2D> m_Token11;
 	Crumble::Ref<Crumble::Texture2D> m_Token12;
 	Crumble::Ref<Crumble::Texture2D> m_Robber;
+
+	Crumble::Ref<Crumble::Texture2D> m_BlueCity;
+	Crumble::Ref<Crumble::Texture2D> m_BlueHorizontalRoad;
+	Crumble::Ref<Crumble::Texture2D> m_BlueRoadLeftUp;
+	Crumble::Ref<Crumble::Texture2D> m_BlueRoadRightUp;
+	Crumble::Ref<Crumble::Texture2D> m_BlueSettlement;
+	Crumble::Ref<Crumble::Texture2D> m_BlueVerticalRoad;
+	Crumble::Ref<Crumble::Texture2D> m_RedCity;
+	Crumble::Ref<Crumble::Texture2D> m_RedHorizontalRoad;
+	Crumble::Ref<Crumble::Texture2D> m_RedRoadLeftUp;
+	Crumble::Ref<Crumble::Texture2D> m_RedRoadRightUp;
+	Crumble::Ref<Crumble::Texture2D> m_RedSettlement;
+	Crumble::Ref<Crumble::Texture2D> m_RedVerticalRoad;
+
+	
 
 	Crumble::Ref<Crumble::Shader> m_FlatColorShader;
 
