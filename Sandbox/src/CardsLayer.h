@@ -1,32 +1,44 @@
 #pragma once
 
 #include "Crumble.h"
-#include "GameLayer.h"
+#include "CrossPoint.h"
 
-using namespace Crumble;
-
-class CardsLayer : public Crumble::Layer 
+class CardsLayer
 {
 public:
-	CardsLayer();
+	CardsLayer() {};
 	virtual ~CardsLayer() = default;
 
-	virtual void OnAttach() override;
-	virtual void OnDetach() override;
-	virtual void OnUpdate(Crumble::Timestep ts) override;
-	virtual void OnImGuiRender() override;
-	virtual void OnEvent(Crumble::Event & event) override;
+	void Init();
+	void OnRender(std::vector<int>& player1, std::vector<int>& player2);
 
-	bool OnMouseButtonPressed(Crumble::MouseButtonPressedEvent & e);
-	Ref<Player> GetPlayer(std::string name);
+
 private:
 	Crumble::Ref<Crumble::Texture2D> m_BrickCard;
-	Crumble::Ref<Crumble::Texture2D> m_SandCard;
 	Crumble::Ref<Crumble::Texture2D> m_SheepCard;
 	Crumble::Ref<Crumble::Texture2D> m_StoneCard;
-	Crumble::Ref<Crumble::Texture2D> m_WaterCard;
 	Crumble::Ref<Crumble::Texture2D> m_WheatCard;
 	Crumble::Ref<Crumble::Texture2D> m_WoodCard;
 
-	std::vector<Player> m_Players;
+	Crumble::Ref<Crumble::Texture2D> m_BuildingCosts;
+	Crumble::Ref<Crumble::Texture2D> m_BlackBar;
+
+	Crumble::Ref<Crumble::Texture2D> m_Token0;
+	Crumble::Ref<Crumble::Texture2D> m_Token1;
+	Crumble::Ref<Crumble::Texture2D> m_Token2;
+	Crumble::Ref<Crumble::Texture2D> m_Token3;
+	Crumble::Ref<Crumble::Texture2D> m_Token4;
+	Crumble::Ref<Crumble::Texture2D> m_Token5;
+	Crumble::Ref<Crumble::Texture2D> m_Token6;
+	Crumble::Ref<Crumble::Texture2D> m_Token7;
+	Crumble::Ref<Crumble::Texture2D> m_Token8;
+	Crumble::Ref<Crumble::Texture2D> m_Token9;
+	Crumble::Ref<Crumble::Texture2D> m_Token10;
+
+	std::vector<Crumble::Ref<Crumble::Texture2D>> p1_Cards;
+	std::vector<Crumble::Ref<Crumble::Texture2D>> p1_CardAmount;
+	std::vector<Crumble::Ref<Crumble::Texture2D>> p1_CardAmountInt;
+	std::vector<Crumble::Ref<Crumble::Texture2D>> p2_Cards;
+	std::vector<Crumble::Ref<Crumble::Texture2D>> p2_CardAmount;
+	std::vector<Crumble::Ref<Crumble::Texture2D>> p2_CardAmountInt;
 };

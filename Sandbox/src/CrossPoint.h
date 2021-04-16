@@ -27,3 +27,15 @@ struct Structure
 	glm::vec3 nearestCrossPoint;
 	StructureType buildType = StructureType::NONE;
 };
+
+enum class Resource
+{
+	NONE = -1,
+	BRICK = 0,
+	SHEEP = 1,
+	STONE = 2,
+	WHEAT = 3,
+	WOOD = 4
+};
+
+

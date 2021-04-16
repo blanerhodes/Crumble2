@@ -35,17 +35,17 @@ void TileMap::Init()
 	m_Robber = Texture2D::Create("assets/textures/robber.png");
 
 	m_BlueCity = Texture2D::Create("assets/textures/BlueCity.png");
-	m_BlueHorizontalRoad = Texture2D::Create("assets/textures/BlueHorizontalRoad.png"); //change to vertical
+	//m_BlueHorizontalRoad = Texture2D::Create("assets/textures/BlueHorizontalRoad.png"); //change to vertical
 	m_BlueRoadLeftUp = Texture2D::Create("assets/textures/BlueRoadLeftUp.png");
 	m_BlueRoadRightUp = Texture2D::Create("assets/textures/BlueRoadRightUp.png");
 	m_BlueSettlement = Texture2D::Create("assets/textures/BlueSettlement.png");
-	//m_BlueVerticalRoad  = Texture2D::Create("assets/textures/BlueRoadVertical.png");
+	m_BlueVerticalRoad  = Texture2D::Create("assets/textures/BlueRoadVertical.png");
 	m_RedCity = Texture2D::Create("assets/textures/RedCity.png");
-	m_RedHorizontalRoad = Texture2D::Create("assets/textures/RedHorizontalRoad.png");
+	//m_RedHorizontalRoad = Texture2D::Create("assets/textures/RedHorizontalRoad.png");
 	m_RedRoadLeftUp = Texture2D::Create("assets/textures/RedRoadLeftUp.png");
 	m_RedRoadRightUp = Texture2D::Create("assets/textures/RedRoadRightUp.png");
 	m_RedSettlement = Texture2D::Create("assets/textures/RedSettlement.png");
-	//m_RedVerticalRoad = Texture2D::Create("assets/textures/RedRoadVertical.png");
+	m_RedVerticalRoad = Texture2D::Create("assets/textures/RedRoadVertical.png");
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -269,7 +269,7 @@ void TileMap::RenderStructures(std::vector<CrossPoint>& nodeMap, std::vector<Str
 			Renderer2D::DrawQuad(structure.position, standardTokenSize, m_RedRoadRightUp);
 			break;
 		case StructureType::ROAD_VERTICAL:
-			Renderer2D::DrawQuad(structure.position, standardTokenSize, m_RedHorizontalRoad); //needs to be vertical road when we get it
+			Renderer2D::DrawQuad(structure.position, standardTokenSize, m_RedVerticalRoad); //needs to be vertical road when we get it
 			break;
 		default:
 			CR_ASSERT(false, "Bad Structure Value on TileMap render");
@@ -293,7 +293,7 @@ void TileMap::RenderStructures(std::vector<CrossPoint>& nodeMap, std::vector<Str
 			Renderer2D::DrawQuad(structure.position, standardTokenSize, m_BlueRoadRightUp);
 			break;
 		case StructureType::ROAD_VERTICAL:
-			Renderer2D::DrawQuad(structure.position, standardTokenSize, m_BlueHorizontalRoad); //needs to be vertical road when we get it
+			Renderer2D::DrawQuad(structure.position, standardTokenSize, m_BlueVerticalRoad); //needs to be vertical road when we get it
 		default:
 			CR_ASSERT(false, "Bad Structure Value on TileMap render");
 		}

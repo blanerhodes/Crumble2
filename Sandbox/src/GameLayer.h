@@ -2,6 +2,7 @@
 
 #include "Crumble.h"
 #include "TileMap.h"
+#include "CardsLayer.h"
 #include "Player.h"
 #include "CrossPoint.h"
 
@@ -31,6 +32,8 @@ private:
 private:
 	Crumble::Scope<Crumble::OrthographicCamera> m_Camera;
 	TileMap m_TileMap;
+	CardsLayer m_CardsLayer;
+
 	std::vector<CrossPoint> m_NodeMap;
 	Crumble::Ref<Player> m_Player1;
 	Crumble::Ref<Player> m_Player2;

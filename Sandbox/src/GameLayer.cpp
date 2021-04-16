@@ -23,6 +23,8 @@ GameLayer::GameLayer() : Layer("GameLayer")
 void GameLayer::OnAttach()
 {
 	m_TileMap.Init();
+	// cards layer
+	m_CardsLayer.Init();
 
 	ImGuiIO io = ImGui::GetIO();
 	//m_Font = io.Fonts->AddFontFromFileTTF("assets/OpenSans-Regular.ttf", 120.0f);
@@ -56,13 +58,22 @@ void GameLayer::OnUpdate(Timestep ts)
 
 
 	m_TileMap.OnUpdate(ts);
+	//card
+	//m_CardsLayer.OnUpdate(ts);
+
 	RenderCommand::SetClearColor({ 0.0f, 0.0f, 0.0f, 1 });
 	RenderCommand::Clear();
 	Renderer2D::BeginScene(*m_Camera);
 	m_TileMap.OnRender(m_NodeMap);
+	//card
+	m_CardsLayer.OnRender(m_Player1->GetResources(), m_Player2->GetResources());
+
 	m_TileMap.RenderStructures(m_NodeMap, m_Player1->GetStructures(), m_Player2->GetStructures());
+	//card
 	Renderer2D::EndScene();
+
 }
+
 
 void GameLayer::OnImGuiRender()
 {
