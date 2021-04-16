@@ -30,12 +30,5 @@ struct Structure
 
 enum class Resource
 {
-	NONE = -1,
-	BRICK = 0,
-	SHEEP = 1,
-	STONE = 2,
-	WHEAT = 3,
-	WOOD = 4
+	NONE = -1, BRICK = 0, SHEEP = 1, STONE = 2, WHEAT = 3, WOOD = 4
 };
-
-

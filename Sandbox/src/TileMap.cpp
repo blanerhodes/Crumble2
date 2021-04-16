@@ -49,30 +49,45 @@ void TileMap::Init()
 
 	for (int i = 0; i < 4; i++)
 	{
-		m_Tiles.push_back(m_WoodTile);
-		m_Tiles.push_back(m_WheatTile);
-		m_Tiles.push_back(m_SheepTile);
+		HexNode wood(m_WoodTile, Resource::WOOD);
+		m_Tiles.push_back(wood);
+		HexNode wheat(m_WheatTile, Resource::WHEAT);
+		m_Tiles.push_back(wheat);
+		HexNode sheep(m_SheepTile, Resource::SHEEP);
+		m_Tiles.push_back(sheep);
 	}
 	for (int i = 0; i < 3; i++)
 	{
-		m_Tiles.push_back(m_BrickTile);
-		m_Tiles.push_back(m_StoneTile);
+		HexNode brick(m_BrickTile, Resource::BRICK);
+		m_Tiles.push_back(brick);
+		HexNode stone(m_StoneTile, Resource::STONE);
+		m_Tiles.push_back(stone);
 	}
 
 	//1: 2 12
 	//2: 11 4 8 10 9 3 5 6
-	m_Tokens.push_back(m_Token2);
-	m_Tokens.push_back(m_Token12);
+	DiceValueNode val2(m_Token2, 2);
+	m_Tokens.push_back(val2);
+	DiceValueNode val12(m_Token12, 12);
+	m_Tokens.push_back(val12);
 	for (int i = 0; i < 2; i++)
 	{
-		m_Tokens.push_back(m_Token3);
-		m_Tokens.push_back(m_Token4);
-		m_Tokens.push_back(m_Token5);
-		m_Tokens.push_back(m_Token6);
-		m_Tokens.push_back(m_Token8);
-		m_Tokens.push_back(m_Token9);
-		m_Tokens.push_back(m_Token10);
-		m_Tokens.push_back(m_Token11);
+		DiceValueNode val3(m_Token3, 3);
+		m_Tokens.push_back(val3);
+		DiceValueNode val4(m_Token4, 4);
+		m_Tokens.push_back(val4);
+		DiceValueNode val5(m_Token5, 5);
+		m_Tokens.push_back(val5);
+		DiceValueNode val6(m_Token6, 6);
+		m_Tokens.push_back(val6);
+		DiceValueNode val8(m_Token8, 8);
+		m_Tokens.push_back(val8);
+		DiceValueNode val9(m_Token9, 9);
+		m_Tokens.push_back(val9);
+		DiceValueNode val10(m_Token10, 10);
+		m_Tokens.push_back(val10);
+		DiceValueNode val11(m_Token11, 11);
+		m_Tokens.push_back(val11);
 	}
 
 	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
@@ -80,8 +95,10 @@ void TileMap::Init()
 	shuffle(m_Tokens.begin(), m_Tokens.end(), std::default_random_engine(seed));
 
 	int insertPoint = Random::Float() * (m_Tiles.size() - 1);
-	m_Tiles.emplace(m_Tiles.begin() + insertPoint, m_SandTile);
-	m_Tokens.emplace(m_Tokens.begin() + insertPoint, m_Robber);
+	HexNode sand(m_SandTile);
+	m_Tiles.emplace(m_Tiles.begin() + insertPoint, sand);
+	DiceValueNode val7(m_Robber, 7);
+	m_Tokens.emplace(m_Tokens.begin() + insertPoint, val7);
 }
 
 void TileMap::OnUpdate(Timestep ts)
@@ -133,9 +150,11 @@ void TileMap::OnRender(std::vector<CrossPoint>& nodeMap)
 		currZ += 0.01;
 		currX += tileOffsetX;
 		glm::vec3 currPos = nodeMap.at(vertIter).position;
-		Renderer2D::DrawQuad({ currPos.x, currPos.y - tileYMidpoint, currZ }, standardTileSize, m_Tiles.at(i));
+		m_Tiles.at(i).position = { currPos.x, currPos.y - tileYMidpoint };
+		m_Tiles.at(i).diceValue = m_Tokens.at(i).diceValue;
+		Renderer2D::DrawQuad({ m_Tiles.at(i).position.x, m_Tiles.at(i).position.y, currZ }, standardTileSize, m_Tiles.at(i).texture);
 		currZ += 0.01;
-		Renderer2D::DrawQuad({ currPos.x, currPos.y - tokenYMidpoint, currZ }, standardTokenSize, m_Tokens.at(i));
+		Renderer2D::DrawQuad({ currPos.x, currPos.y - tokenYMidpoint, currZ }, standardTokenSize, m_Tokens.at(i).texture);
 	}
 	currX += tileOffsetX;
 	currZ += 0.01;
@@ -151,9 +170,11 @@ void TileMap::OnRender(std::vector<CrossPoint>& nodeMap)
 		currZ += 0.01;
 		currX += tileOffsetX;
 		glm::vec3 currPos = nodeMap.at(vertIter).position;
-		Renderer2D::DrawQuad({ currPos.x, currPos.y - tileYMidpoint, currZ }, standardTileSize, m_Tiles.at(i));
+		m_Tiles.at(i).position = { currPos.x, currPos.y - tileYMidpoint};
+		m_Tiles.at(i).diceValue = m_Tokens.at(i).diceValue;
+		Renderer2D::DrawQuad({ m_Tiles.at(i).position.x, m_Tiles.at(i).position.y, currZ }, standardTileSize, m_Tiles.at(i).texture);
 		currZ += 0.01;
-		Renderer2D::DrawQuad({ currPos.x, currPos.y - tokenYMidpoint, currZ }, standardTokenSize, m_Tokens.at(i));
+		Renderer2D::DrawQuad({ currPos.x, currPos.y - tokenYMidpoint, currZ }, standardTokenSize, m_Tokens.at(i).texture);
 	}
 	currX += tileOffsetX;
 	currZ += 0.01;
@@ -169,9 +190,11 @@ void TileMap::OnRender(std::vector<CrossPoint>& nodeMap)
 		currZ += 0.01;
 		currX += tileOffsetX;
 		glm::vec3 currPos = nodeMap.at(vertIter).position;
-		Renderer2D::DrawQuad({ currPos.x, currPos.y - tileYMidpoint, currZ }, standardTileSize, m_Tiles.at(i));
+		m_Tiles.at(i).position = { currPos.x, currPos.y - tileYMidpoint };
+		m_Tiles.at(i).diceValue = m_Tokens.at(i).diceValue;
+		Renderer2D::DrawQuad({ m_Tiles.at(i).position.x, m_Tiles.at(i).position.y, currZ }, standardTileSize, m_Tiles.at(i).texture);
 		currZ += 0.01;
-		Renderer2D::DrawQuad({ currPos.x, currPos.y - tokenYMidpoint, currZ }, standardTokenSize, m_Tokens.at(i));
+		Renderer2D::DrawQuad({ currPos.x, currPos.y - tokenYMidpoint, currZ }, standardTokenSize, m_Tokens.at(i).texture);
 		
 	}
 	currX += tileOffsetX;
@@ -194,9 +217,11 @@ void TileMap::OnRender(std::vector<CrossPoint>& nodeMap)
 			currZ += 0.01;
 			currX += tileOffsetX;
 			glm::vec3 currPos = currNode.position;
-			Renderer2D::DrawQuad({ currPos.x, currPos.y - tileYMidpoint, currZ }, standardTileSize, m_Tiles.at(i));
+			m_Tiles.at(i).position = { currPos.x, currPos.y - tileYMidpoint };
+			m_Tiles.at(i).diceValue = m_Tokens.at(i).diceValue;
+			Renderer2D::DrawQuad({ m_Tiles.at(i).position.x, m_Tiles.at(i).position.y, currZ }, standardTileSize, m_Tiles.at(i).texture);
 			currZ += 0.01;
-			Renderer2D::DrawQuad({ currPos.x, currPos.y - tokenYMidpoint, currZ }, standardTokenSize, m_Tokens.at(i));
+			Renderer2D::DrawQuad({ currPos.x, currPos.y - tokenYMidpoint, currZ }, standardTokenSize, m_Tokens.at(i).texture);
 		}
 		else
 			i--;
@@ -222,9 +247,11 @@ void TileMap::OnRender(std::vector<CrossPoint>& nodeMap)
 			currZ += 0.01;
 			currX += tileOffsetX;
 			glm::vec3 currPos = currNode.position;
-			Renderer2D::DrawQuad({ currPos.x, currPos.y - tileYMidpoint, currZ }, standardTileSize, m_Tiles.at(i));
+			m_Tiles.at(i).position = { currPos.x, currPos.y - tileYMidpoint };
+			m_Tiles.at(i).diceValue = m_Tokens.at(i).diceValue;
+			Renderer2D::DrawQuad({ m_Tiles.at(i).position.x, m_Tiles.at(i).position.y, currZ }, standardTileSize, m_Tiles.at(i).texture);
 			currZ += 0.01;
-			Renderer2D::DrawQuad({ currPos.x, currPos.y - tokenYMidpoint, currZ }, standardTokenSize, m_Tokens.at(i));
+			Renderer2D::DrawQuad({ currPos.x, currPos.y - tokenYMidpoint, currZ }, standardTokenSize, m_Tokens.at(i).texture);
 		}
 		else
 			i--;
@@ -249,10 +276,10 @@ void TileMap::OnRender(std::vector<CrossPoint>& nodeMap)
 }
 
 
-void TileMap::RenderStructures(std::vector<CrossPoint>& nodeMap, std::vector<Structure>& player1, std::vector<Structure>& player2)
+void TileMap::RenderStructures(std::vector<CrossPoint>& nodeMap, std::vector<Ref<Player>>& players)
 {
 	glm::vec2 standardTokenSize = glm::vec2(1.0f);
-	for (Structure& structure : player1)
+	for (Structure& structure : players.at(0)->GetStructures())
 	{
 		switch (structure.buildType)
 		{
@@ -276,7 +303,7 @@ void TileMap::RenderStructures(std::vector<CrossPoint>& nodeMap, std::vector<Str
 		}
 	}
 
-	for (Structure& structure : player2)
+	for (Structure& structure : players.at(1)->GetStructures())
 	{
 		switch (structure.buildType)
 		{
@@ -300,9 +327,35 @@ void TileMap::RenderStructures(std::vector<CrossPoint>& nodeMap, std::vector<Str
 	}
 }
 
-void TileMap::OnImGuiRender()
+void TileMap::GatherResources(std::vector<Crumble::Ref<Player>> players, uint32_t diceRoll)
 {
-	
+	float tileOffsetX = 2.2f; //these are widened by 0.1
+	float tileOffsetY = 1.9f;
+	for (auto& player : players)
+	{
+		for (auto& building : player->GetStructures())
+		{
+			if (building.buildType == StructureType::SETTLEMENT || building.buildType == StructureType::CITY)
+			{
+				if(building.buildType == StructureType::CITY)
+					CR_TRACE("BUILDING TYPE CITY");
+				float negX = building.position.x - tileOffsetX;
+				float posX = building.position.x + tileOffsetX;
+				float negY = building.position.y - tileOffsetY;
+				float posY = building.position.y + tileOffsetY;
+				for (auto& resource : m_Tiles)
+				{
+					if(resource.position.x > negX && resource.position.x < posX && resource.position.y > negY && resource.position.y < posY && resource.diceValue == diceRoll && diceRoll != 7)
+					{
+						uint32_t resourceCount = (building.buildType == StructureType::CITY) ? 2 : 1;
+						CR_TRACE("BEFORE ADDING RESOURCE");
+						player->AddResource(resource.type, resourceCount);
+						CR_TRACE("AFTER ADDING RESOURCE");
+					}
+				}
+			}
+		}
+	}
 }
 
 void TileMap::OnEvent(Event& e)

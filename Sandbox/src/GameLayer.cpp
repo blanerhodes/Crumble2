@@ -12,8 +12,8 @@ GameLayer::GameLayer() : Layer("GameLayer")
 {
 	auto& window = Application::Get().GetWindow();
 	CreateCamera(window.GetWidth(), window.GetHeight());
-	m_Player1 = CreateRef<Player>("Player1");
-	m_Player2 = CreateRef<Player>("Player2");
+	m_Players.emplace_back(CreateRef<Player>("Player1"));
+	m_Players.emplace_back(CreateRef<Player>("Player2"));
 
 	Random::Init();
 	InitNodeMap(-6.0f, 6.5f);
@@ -26,8 +26,6 @@ void GameLayer::OnAttach()
 	// cards layer
 	m_CardsLayer.Init();
 
-	ImGuiIO io = ImGui::GetIO();
-	//m_Font = io.Fonts->AddFontFromFileTTF("assets/OpenSans-Regular.ttf", 120.0f);
 }
 
 void GameLayer::OnDetach()
@@ -52,10 +50,15 @@ void GameLayer::OnUpdate(Timestep ts)
 		default:
 			CR_TRACE("CLICKED OUTSIDE OF MAP WINDOW");
 		}
+		m_TileMap.GatherResources(m_Players, m_CurrentDiceRoll);
+		
+			for (auto& resource : m_Players.at(0)->GetResources())
+			{
+				CR_TRACE("Resource Count: {0}", resource);
+			}
 		
 	}
 	m_MouseState = Input::IsMouseButtonReleased(CR_MOUSE_BUTTON_1);
-
 
 	m_TileMap.OnUpdate(ts);
 	//card
@@ -68,8 +71,8 @@ void GameLayer::OnUpdate(Timestep ts)
 	//card
 	m_CardsLayer.OnRender(m_Player1->GetResources(), m_Player2->GetResources());
 
-	m_TileMap.RenderStructures(m_NodeMap, m_Player1->GetStructures(), m_Player2->GetStructures());
 	//card
+	m_TileMap.RenderStructures(m_NodeMap, m_Players);
 	Renderer2D::EndScene();
 
 }
@@ -157,6 +160,8 @@ void GameLayer::HandleMapEvents(float normX, float normY)
 
 		structure.buildType = m_Selection;
 		structure.nearestCrossPoint = closest.position;
+		/*if(m_Selection == StructureType::SETTLEMENT)
+			m_Players.at(m_CurrentPlayer)->*/
 	}
 	else if (m_Selection == StructureType::ROAD)
 	{
@@ -192,11 +197,7 @@ void GameLayer::HandleMapEvents(float normX, float normY)
 		structure.nearestCrossPoint = closest.position;
 	}
 
-	if (m_CurrentPlayer == 0)
-		m_Player1->AddStructure(structure);
-	else
-		m_Player2->AddStructure(structure);
-	CR_TRACE("Size: {0}", m_Player1->GetStructures().size());
+	m_Players.at(m_CurrentPlayer)->AddStructure(structure);
 }
 
 void GameLayer::InitNodeMap(float xAnchor, float yAnchor)
