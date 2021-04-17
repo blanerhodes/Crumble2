@@ -11,7 +11,7 @@ using namespace Crumble;
 
 void TileMap::Init()
 {
-	m_Checkerboard = Texture2D::Create("assets/textures/Checkerboard.png");
+	m_Checkerboard = Texture2D::Create("assets/textures/WaterBackground.png");
 
 	m_BrickTile = Texture2D::Create("assets/textures/BrickTile.png");
 	m_SandTile = Texture2D::Create("assets/textures/SandTile.png");
@@ -271,7 +271,7 @@ void TileMap::OnRender(std::vector<CrossPoint>& nodeMap)
 		Renderer2D::DrawQuad({ currX, currY, currZ }, standardTileSize, m_WaterTile);
 	}
 
-	Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, glm::vec2(20.0f), m_Checkerboard, 10.0f, glm::vec4(1.0f, 0.9f, 0.9f, 1.0f));
+	Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, glm::vec2(40.0f), m_Checkerboard, 10.0f, glm::vec4(1.0f, 0.9f, 0.9f, 1.0f));
 
 }
 

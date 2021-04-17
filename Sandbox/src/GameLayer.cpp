@@ -69,7 +69,7 @@ void GameLayer::OnUpdate(Timestep ts)
 	Renderer2D::BeginScene(*m_Camera);
 	m_TileMap.OnRender(m_NodeMap);
 	//card
-	m_CardsLayer.OnRender(m_Player1->GetResources(), m_Player2->GetResources());
+	m_CardsLayer.OnRender(m_Players);
 
 	//card
 	m_TileMap.RenderStructures(m_NodeMap, m_Players);

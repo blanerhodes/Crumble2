@@ -35,29 +35,34 @@ void CardsLayer::Init()
 	m_Token9 = Texture2D::Create("assets/textures/Token9.png");
 	m_Token10 = Texture2D::Create("assets/textures/Token10.png");
 
-	p1_Cards.push_back(m_BrickCard);
-	p1_Cards.push_back(m_WoodCard);
-	p1_Cards.push_back(m_StoneCard);
-	p1_Cards.push_back(m_SheepCard);
-	p1_Cards.push_back(m_WheatCard);
-	for (int i = 0; i < 5; i++) p1_CardAmount.push_back(m_Token0);
-	for (int i = 0; i < 5; i++) p1_CardAmountInt.push_back(0);
+	m_P1Settlement = Texture2D::Create("assets/textures/BlueSettlement.png");
+	m_P1City = Texture2D::Create("assets/textures/BlueCity.png");
+	m_P1Road = Texture2D::Create("assets/textures/BlueHorizontalRoad.png");
 
-	p2_Cards.push_back(m_BrickCard);
-	p2_Cards.push_back(m_WoodCard);
-	p2_Cards.push_back(m_StoneCard);
-	p2_Cards.push_back(m_SheepCard);
-	p2_Cards.push_back(m_WheatCard);
-	for (int i = 0; i < 5; i++) p2_CardAmount.push_back(m_Token0);
-	for (int i = 0; i < 5; i++) p2_CardAmountInt.push_back(0);
+	m_P2Settlement = Texture2D::Create("assets/textures/RedSettlement.png");
+	m_P2City = Texture2D::Create("assets/textures/RedCity.png");
+	m_P2Road = Texture2D::Create("assets/textures/RedHorizontalRoad.png");
+
+	m_StoredTokens.push_back(m_Token0);
+	m_StoredTokens.push_back(m_Token1);
+	m_StoredTokens.push_back(m_Token2);
+	m_StoredTokens.push_back(m_Token3);
+	m_StoredTokens.push_back(m_Token4);
+	m_StoredTokens.push_back(m_Token5);
+	m_StoredTokens.push_back(m_Token6);
+	m_StoredTokens.push_back(m_Token7);
+	m_StoredTokens.push_back(m_Token8);
+	m_StoredTokens.push_back(m_Token9);
+	m_StoredTokens.push_back(m_Token10);
 }
 
-void CardsLayer::OnRender(std::vector<int>& player1, std::vector<int>& player2)
+void CardsLayer::OnRender(std::vector<Crumble::Ref<Player>>& m_Players)
 {
 	glm::vec2 CardSize = glm::vec2(3.0f);
 	glm::vec2 BuildGuideSize = glm::vec2(8.0f);
 	glm::vec2 TokenSize = glm::vec2(1.0f);
 	glm::vec2 BarSize = glm::vec2(4.0f);
+	glm::vec2 SelectionSize = glm::vec2(1.0);
 
 	float xStart = -12.0f;
 	float yStart = -6.0f;
@@ -85,21 +90,29 @@ void CardsLayer::OnRender(std::vector<int>& player1, std::vector<int>& player2)
 
 	Renderer2D::DrawQuad({xStart, 5.0f, 1}, BuildGuideSize, m_BuildingCosts);
 
-	//PLAYER 1
-
-	// order -> BRICK = 0, SHEEP = 1, STONE = 2, WHEAT = 3,	WOOD = 4
-	for (int& resource : player1)
+	for (int i = 0; i < 5; i++) 
 	{
-		// BRICK
-		if (resource == 0)
-		{
-
-		}
+		int rec_amount = m_Players.at(0)->GetResources().at(i);
+		if (i == 0) m_p1_BrickAmount = m_StoredTokens.at(rec_amount);
+		if (i == 4) m_p1_StoneAmount = m_StoredTokens.at(rec_amount);
+		if (i == 2) m_p1_WoodAmount = m_StoredTokens.at(rec_amount);
+		if (i == 3) m_p1_WheatAmount = m_StoredTokens.at(rec_amount);
+		if (i == 1) m_p1_SheepAmount = m_StoredTokens.at(rec_amount);
+		
+		int rec_amount_p2 = m_Players.at(1)->GetResources().at(i);
+		if (i == 0) m_p2_BrickAmount = m_StoredTokens.at(rec_amount_p2);
+		if (i == 0) m_p2_StoneAmount = m_StoredTokens.at(rec_amount_p2);
+		if (i == 0) m_p2_WoodAmount = m_StoredTokens.at(rec_amount_p2);
+		if (i == 0) m_p2_WheatAmount = m_StoredTokens.at(rec_amount_p2);
+		if (i == 0) m_p2_SheepAmount = m_StoredTokens.at(rec_amount_p2);
 	}
+	
 
-	Renderer2D::DrawQuad({ currX + 2, yStart + 4, currZ}, BarSize, m_BlackBar);
+	Renderer2D::DrawQuad({ currX + 0.80, yStart + 1.5, currZ }, BarSize, m_BlackBar);
+	Renderer2D::DrawQuad({ 11.5, yStart + 1.5, currZ}, BarSize, m_BlackBar);
 
-	Renderer2D::DrawQuad({ currX, yStart, currZ }, CardSize, m_BrickCard);
+	currZ += 0.01;
+	Renderer2D::DrawQuad({ currX, yStart, currZ}, CardSize, m_BrickCard);
 	Renderer2D::DrawQuad({ currX, yStart - 0.5f, currZ + 0.01 }, TokenSize, m_p1_BrickAmount);
 	currZ += 0.01;
 	currX += 1.3f;
@@ -138,5 +151,24 @@ void CardsLayer::OnRender(std::vector<int>& player1, std::vector<int>& player2)
 	currX += 1.3f;
 	Renderer2D::DrawQuad({ currX, yStart, currZ }, CardSize, m_WoodCard);
 	Renderer2D::DrawQuad({ currX, yStart - 0.5f, currZ + 0.01 }, TokenSize, m_p2_WoodAmount);
+
+	
+	// Clickable - city, road, settlement, for each player.
+	//PLAYER ONE
+	currZ += 0.01;
+	Renderer2D::DrawQuad({ -13.2, yStart + 1.5, currZ }, SelectionSize, m_P1Road);
+	currZ += 0.01;
+	Renderer2D::DrawQuad({ -12.2, yStart + 1.5, currZ }, SelectionSize, m_P1Settlement);
+	currZ += 0.01;
+	Renderer2D::DrawQuad({ -11.2, yStart + 1.5, currZ }, SelectionSize, m_P1City);
+
+	//PLAYER TWO
+	currZ += 0.01;
+	Renderer2D::DrawQuad({ 10.5, yStart + 1.5, currZ }, SelectionSize, m_P2Road);
+	currZ += 0.01;
+	Renderer2D::DrawQuad({ 11.5, yStart + 1.5, currZ }, SelectionSize, m_P2Settlement);
+	currZ += 0.01;
+	Renderer2D::DrawQuad({ 12.5, yStart + 1.5, currZ }, SelectionSize, m_P2City);
+
 }
 

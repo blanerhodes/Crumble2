@@ -2,6 +2,7 @@
 
 #include "Crumble.h"
 #include "CrossPoint.h"
+#include "Player.h"
 
 class CardsLayer
 {
@@ -10,7 +11,7 @@ public:
 	virtual ~CardsLayer() = default;
 
 	void Init();
-	void OnRender(std::vector<int>& player1, std::vector<int>& player2);
+	void OnRender(std::vector<Crumble::Ref<Player>>& m_Players);
 
 
 private:
@@ -35,10 +36,14 @@ private:
 	Crumble::Ref<Crumble::Texture2D> m_Token9;
 	Crumble::Ref<Crumble::Texture2D> m_Token10;
 
-	std::vector<Crumble::Ref<Crumble::Texture2D>> p1_Cards;
-	std::vector<Crumble::Ref<Crumble::Texture2D>> p1_CardAmount;
-	std::vector<Crumble::Ref<Crumble::Texture2D>> p1_CardAmountInt;
-	std::vector<Crumble::Ref<Crumble::Texture2D>> p2_Cards;
-	std::vector<Crumble::Ref<Crumble::Texture2D>> p2_CardAmount;
-	std::vector<Crumble::Ref<Crumble::Texture2D>> p2_CardAmountInt;
+	Crumble::Ref<Crumble::Texture2D> m_P1Settlement;
+	Crumble::Ref<Crumble::Texture2D> m_P1Road;
+	Crumble::Ref<Crumble::Texture2D> m_P1City;
+
+	Crumble::Ref<Crumble::Texture2D> m_P2Settlement;
+	Crumble::Ref<Crumble::Texture2D> m_P2Road;
+	Crumble::Ref<Crumble::Texture2D> m_P2City;
+
+	// Stores tokens so that index -> number texture
+	std::vector<Crumble::Ref<Crumble::Texture2D>> m_StoredTokens;
 };
