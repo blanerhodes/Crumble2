@@ -36,7 +36,7 @@ private:
 	int m_CurrentPlayer = 0;
 	uint32_t m_CurrentDiceRoll = 8;
 	bool m_RollState = false;
-	StructureType m_Selection = StructureType::CITY;
+	StructureType m_Selection = StructureType::SETTLEMENT;
 	bool m_MouseState = true;
 
 	float m_AspectRatio;
