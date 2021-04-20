@@ -3,10 +3,8 @@
 #include "Crumble.h"
 #include "CrossPoint.h"
 
-enum class Resource
-{
-	BRICK, SHEEP, STONE, WHEAT, WOOD
-};
+
+
 
 class Player
 {

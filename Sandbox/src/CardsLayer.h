@@ -1,32 +1,49 @@
 #pragma once
 
 #include "Crumble.h"
-#include "GameLayer.h"
+#include "CrossPoint.h"
+#include "Player.h"
 
-using namespace Crumble;
-
-class CardsLayer : public Crumble::Layer 
+class CardsLayer
 {
 public:
-	CardsLayer();
+	CardsLayer() {};
 	virtual ~CardsLayer() = default;
 
-	virtual void OnAttach() override;
-	virtual void OnDetach() override;
-	virtual void OnUpdate(Crumble::Timestep ts) override;
-	virtual void OnImGuiRender() override;
-	virtual void OnEvent(Crumble::Event & event) override;
+	void Init();
+	void OnRender(std::vector<Crumble::Ref<Player>>& m_Players);
 
-	bool OnMouseButtonPressed(Crumble::MouseButtonPressedEvent & e);
-	Ref<Player> GetPlayer(std::string name);
+
 private:
 	Crumble::Ref<Crumble::Texture2D> m_BrickCard;
-	Crumble::Ref<Crumble::Texture2D> m_SandCard;
 	Crumble::Ref<Crumble::Texture2D> m_SheepCard;
 	Crumble::Ref<Crumble::Texture2D> m_StoneCard;
-	Crumble::Ref<Crumble::Texture2D> m_WaterCard;
 	Crumble::Ref<Crumble::Texture2D> m_WheatCard;
 	Crumble::Ref<Crumble::Texture2D> m_WoodCard;
 
-	std::vector<Player> m_Players;
+	Crumble::Ref<Crumble::Texture2D> m_BuildingCosts;
+	Crumble::Ref<Crumble::Texture2D> m_BlackBar;
+
+	Crumble::Ref<Crumble::Texture2D> m_Token0;
+	Crumble::Ref<Crumble::Texture2D> m_Token1;
+	Crumble::Ref<Crumble::Texture2D> m_Token2;
+	Crumble::Ref<Crumble::Texture2D> m_Token3;
+	Crumble::Ref<Crumble::Texture2D> m_Token4;
+	Crumble::Ref<Crumble::Texture2D> m_Token5;
+	Crumble::Ref<Crumble::Texture2D> m_Token6;
+	Crumble::Ref<Crumble::Texture2D> m_Token7;
+	Crumble::Ref<Crumble::Texture2D> m_Token8;
+	Crumble::Ref<Crumble::Texture2D> m_Token9;
+	Crumble::Ref<Crumble::Texture2D> m_Token10;
+
+	Crumble::Ref<Crumble::Texture2D> m_P1Settlement;
+	Crumble::Ref<Crumble::Texture2D> m_P1Road;
+	Crumble::Ref<Crumble::Texture2D> m_P1City;
+
+	Crumble::Ref<Crumble::Texture2D> m_P2Settlement;
+	Crumble::Ref<Crumble::Texture2D> m_P2Road;
+	Crumble::Ref<Crumble::Texture2D> m_P2City;
+
+	// Stores tokens so that index -> number texture
+	std::vector<Crumble::Ref<Crumble::Texture2D>> m_StoredTokens;
 };
