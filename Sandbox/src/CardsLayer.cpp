@@ -35,13 +35,13 @@ void CardsLayer::Init()
 	m_Token9 = Texture2D::Create("assets/textures/Token9.png");
 	m_Token10 = Texture2D::Create("assets/textures/Token10.png");
 
-	m_P1Settlement = Texture2D::Create("assets/textures/BlueSettlement.png");
-	m_P1City = Texture2D::Create("assets/textures/BlueCity.png");
-	m_P1Road = Texture2D::Create("assets/textures/BlueHorizontalRoad.png");
+	m_P1Settlement = Texture2D::Create("assets/textures/RedSettlement.png");
+	m_P1City = Texture2D::Create("assets/textures/RedCity.png");
+	m_P1Road = Texture2D::Create("assets/textures/RedHorizontalRoad.png");
 
-	m_P2Settlement = Texture2D::Create("assets/textures/RedSettlement.png");
-	m_P2City = Texture2D::Create("assets/textures/RedCity.png");
-	m_P2Road = Texture2D::Create("assets/textures/RedHorizontalRoad.png");
+	m_P2Settlement = Texture2D::Create("assets/textures/BlueSettlement.png");
+	m_P2City = Texture2D::Create("assets/textures/BlueCity.png");
+	m_P2Road = Texture2D::Create("assets/textures/BlueHorizontalRoad.png");
 
 	m_StoredTokens.push_back(m_Token0);
 	m_StoredTokens.push_back(m_Token1);
@@ -93,13 +93,19 @@ void CardsLayer::OnRender(std::vector<Crumble::Ref<Player>>& m_Players)
 	for (int i = 0; i < 5; i++) 
 	{
 		int rec_amount = m_Players.at(0)->GetResources().at(i);
+		if (rec_amount > 10) rec_amount = 10;
+		if (rec_amount < 0) rec_amount = 0;
+
 		if (i == 0) m_p1_BrickAmount = m_StoredTokens.at(rec_amount);
-		if (i == 4) m_p1_StoneAmount = m_StoredTokens.at(rec_amount);
-		if (i == 2) m_p1_WoodAmount = m_StoredTokens.at(rec_amount);
+		if (i == 2) m_p1_StoneAmount = m_StoredTokens.at(rec_amount);
+		if (i == 4) m_p1_WoodAmount = m_StoredTokens.at(rec_amount);
 		if (i == 3) m_p1_WheatAmount = m_StoredTokens.at(rec_amount);
 		if (i == 1) m_p1_SheepAmount = m_StoredTokens.at(rec_amount);
 		
 		int rec_amount_p2 = m_Players.at(1)->GetResources().at(i);
+		if (rec_amount_p2 > 10) rec_amount = 10;
+		if (rec_amount_p2 < 0) rec_amount = 0;
+
 		if (i == 0) m_p2_BrickAmount = m_StoredTokens.at(rec_amount_p2);
 		if (i == 0) m_p2_StoneAmount = m_StoredTokens.at(rec_amount_p2);
 		if (i == 0) m_p2_WoodAmount = m_StoredTokens.at(rec_amount_p2);
@@ -170,5 +176,7 @@ void CardsLayer::OnRender(std::vector<Crumble::Ref<Player>>& m_Players)
 	currZ += 0.01;
 	Renderer2D::DrawQuad({ 12.5, yStart + 1.5, currZ }, SelectionSize, m_P2City);
 
+	//currZ += 0.01;
+	//Renderer2D::DrawQuad({ 0.0f, 0.0f, 10 }, glm::vec2(10.0f), m_BlackBar, 10.0f, glm::vec4(-14.0f, -0.5f, -7.9f, -6.4f));
 }
 
