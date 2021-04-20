@@ -23,6 +23,8 @@ GameLayer::GameLayer() : Layer("GameLayer")
 void GameLayer::OnAttach()
 {
 	m_TileMap.Init();
+	// cards layer
+	m_CardsLayer.Init();
 
 }
 
@@ -45,6 +47,18 @@ void GameLayer::OnUpdate(Timestep ts)
 		case ActiveFrame::MAP:
 			HandleMapEvents(normX, normY);
 			break;
+		case ActiveFrame::P1_ROAD:
+			CR_TRACE("CLICKED IN P1_ROAD");
+			HandleP1PlacementEvents(normX, normY, StructureType::ROAD);
+			break;
+		case ActiveFrame::P1_CITY:
+			CR_TRACE("CLICKED IN P1_CITY");
+			HandleP1PlacementEvents(normX, normY, StructureType::CITY);
+			break;
+		case ActiveFrame::P1_SETTLEMENT:
+			CR_TRACE("CLICKED IN P1_SETTLEMENT");
+			HandleP1PlacementEvents(normX, normY, StructureType::SETTLEMENT);
+			break;
 		default:
 			CR_TRACE("CLICKED OUTSIDE OF MAP WINDOW");
 		}
@@ -59,13 +73,22 @@ void GameLayer::OnUpdate(Timestep ts)
 	m_MouseState = Input::IsMouseButtonReleased(CR_MOUSE_BUTTON_1);
 
 	m_TileMap.OnUpdate(ts);
+	//card
+	//m_CardsLayer.OnUpdate(ts);
+
 	RenderCommand::SetClearColor({ 0.0f, 0.0f, 0.0f, 1 });
 	RenderCommand::Clear();
 	Renderer2D::BeginScene(*m_Camera);
 	m_TileMap.OnRender(m_NodeMap);
+	//card
+	m_CardsLayer.OnRender(m_Players);
+
+	//card
 	m_TileMap.RenderStructures(m_NodeMap, m_Players);
 	Renderer2D::EndScene();
+
 }
+
 
 void GameLayer::OnImGuiRender()
 {
@@ -102,8 +125,14 @@ ActiveFrame GameLayer::GetActiveFrame(float x, float y)
 {
 	if (x > m_MapFrame.r && x < m_MapFrame.g && y > m_MapFrame.b && y < m_MapFrame.a)
 		return ActiveFrame::MAP;
-	if (x > m_Player1CardsFrame.r && x < m_Player1CardsFrame.g && y > m_Player1CardsFrame.b && y < m_Player1CardsFrame.a)
-		return ActiveFrame::PLAYER1_CARDS;
+	if (x > m_Player1Road.r && x < m_Player1Road.g && y > m_Player1Road.b && y < m_Player1Road.a)
+		return ActiveFrame::P1_ROAD;
+	if (x > m_Player1City.r && x < m_Player1City.g && y > m_Player1City.b && y < m_Player1City.a)
+		return ActiveFrame::P1_CITY;
+	if (x > m_Player1Settlement.r && x < m_Player1Settlement.g && y > m_Player1Settlement.b && y < m_Player1Settlement.a)
+		return ActiveFrame::P1_SETTLEMENT;	
+	//if (x > m_Player1CardsFrame.r && x < m_Player1CardsFrame.g && y > m_Player1CardsFrame.b && y < m_Player1CardsFrame.a)
+		//return ActiveFrame::PLAYER1_CARDS;
 	if (x > m_Player2CardsFrame.r && x < m_Player2CardsFrame.g && y > m_Player2CardsFrame.b && y < m_Player2CardsFrame.a)
 		return ActiveFrame::PLAYER2_CARDS;
 }
@@ -187,6 +216,55 @@ void GameLayer::HandleMapEvents(float normX, float normY)
 	}
 
 	m_Players.at(m_CurrentPlayer)->AddStructure(structure);
+}
+
+void GameLayer::HandleP1PlacementEvents(float normX, float normY, StructureType structure)
+{
+	// take money from the gamers
+	int rec_amount[5];
+	for (int i = 0; i < 5; i++) rec_amount[i] = m_Players.at(0)->GetResources().at(i);
+
+	// BRICK, SHEEP, STONE, WHEAT, WOOD
+	switch (structure)
+	{
+	case StructureType::ROAD:
+		CR_TRACE("PLACING ROAD-- ");
+		for (int i = 0; i < 5; i++)
+		{
+			if (i == 0 && rec_amount[i] > 1)
+				m_Players.at(m_CurrentPlayer)->RemoveResource(Resource::BRICK, 1);
+			if(i == 4 && rec_amount[i] > 1)
+				m_Players.at(m_CurrentPlayer)->RemoveResource(Resource::WOOD, 1);
+		}
+		break;
+	case StructureType::CITY:
+		for (int i = 0; i < 5; i++)
+		{
+			if( i == 3 && rec_amount[i] > 2)
+				m_Players.at(m_CurrentPlayer)->RemoveResource(Resource::WHEAT, 2);
+			if(i == 2 && rec_amount[i] > 3)
+				m_Players.at(m_CurrentPlayer)->RemoveResource(Resource::STONE, 3);
+		}
+		break;
+	case StructureType::SETTLEMENT:
+		for (int i = 0; i < 5; i++)
+		{
+			if(i == 0 && rec_amount[i] > 1)
+				m_Players.at(m_CurrentPlayer)->RemoveResource(Resource::BRICK, 1);
+			if (i == 4 && rec_amount[i] > 1) 
+				m_Players.at(m_CurrentPlayer)->RemoveResource(Resource::WOOD, 1);
+			if( i == 1 && rec_amount[i] > 1)
+				m_Players.at(m_CurrentPlayer)->RemoveResource(Resource::SHEEP, 1);
+			if( i == 3 && rec_amount[i] > 1)
+				m_Players.at(m_CurrentPlayer)->RemoveResource(Resource::WHEAT, 1);
+		}
+		break;
+	}
+}
+
+void RollDiceEvent(float normX, float normY)
+{
+
 }
 
 void GameLayer::InitNodeMap(float xAnchor, float yAnchor)

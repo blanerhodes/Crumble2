@@ -11,7 +11,7 @@ using namespace Crumble;
 
 void TileMap::Init()
 {
-	m_Checkerboard = Texture2D::Create("assets/textures/Checkerboard.png");
+	m_Checkerboard = Texture2D::Create("assets/textures/WaterBackground.png");
 
 	m_BrickTile = Texture2D::Create("assets/textures/BrickTile.png");
 	m_SandTile = Texture2D::Create("assets/textures/SandTile.png");
@@ -35,17 +35,17 @@ void TileMap::Init()
 	m_Robber = Texture2D::Create("assets/textures/robber.png");
 
 	m_BlueCity = Texture2D::Create("assets/textures/BlueCity.png");
-	m_BlueHorizontalRoad = Texture2D::Create("assets/textures/BlueHorizontalRoad.png"); //change to vertical
+	//m_BlueHorizontalRoad = Texture2D::Create("assets/textures/BlueHorizontalRoad.png"); //change to vertical
 	m_BlueRoadLeftUp = Texture2D::Create("assets/textures/BlueRoadLeftUp.png");
 	m_BlueRoadRightUp = Texture2D::Create("assets/textures/BlueRoadRightUp.png");
 	m_BlueSettlement = Texture2D::Create("assets/textures/BlueSettlement.png");
-	//m_BlueVerticalRoad  = Texture2D::Create("assets/textures/BlueRoadVertical.png");
+	m_BlueVerticalRoad  = Texture2D::Create("assets/textures/BlueRoadVertical.png");
 	m_RedCity = Texture2D::Create("assets/textures/RedCity.png");
-	m_RedHorizontalRoad = Texture2D::Create("assets/textures/RedHorizontalRoad.png");
+	//m_RedHorizontalRoad = Texture2D::Create("assets/textures/RedHorizontalRoad.png");
 	m_RedRoadLeftUp = Texture2D::Create("assets/textures/RedRoadLeftUp.png");
 	m_RedRoadRightUp = Texture2D::Create("assets/textures/RedRoadRightUp.png");
 	m_RedSettlement = Texture2D::Create("assets/textures/RedSettlement.png");
-	//m_RedVerticalRoad = Texture2D::Create("assets/textures/RedRoadVertical.png");
+	m_RedVerticalRoad = Texture2D::Create("assets/textures/RedRoadVertical.png");
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -271,7 +271,7 @@ void TileMap::OnRender(std::vector<CrossPoint>& nodeMap)
 		Renderer2D::DrawQuad({ currX, currY, currZ }, standardTileSize, m_WaterTile);
 	}
 
-	Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, glm::vec2(20.0f), m_Checkerboard, 10.0f, glm::vec4(1.0f, 0.9f, 0.9f, 1.0f));
+	Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, glm::vec2(40.0f), m_Checkerboard, 10.0f, glm::vec4(1.0f, 0.9f, 0.9f, 1.0f));
 
 }
 
@@ -296,7 +296,7 @@ void TileMap::RenderStructures(std::vector<CrossPoint>& nodeMap, std::vector<Ref
 			Renderer2D::DrawQuad(structure.position, standardTokenSize, m_RedRoadRightUp);
 			break;
 		case StructureType::ROAD_VERTICAL:
-			Renderer2D::DrawQuad(structure.position, standardTokenSize, m_RedHorizontalRoad); //needs to be vertical road when we get it
+			Renderer2D::DrawQuad(structure.position, standardTokenSize, m_RedVerticalRoad); //needs to be vertical road when we get it
 			break;
 		default:
 			CR_ASSERT(false, "Bad Structure Value on TileMap render");
@@ -320,7 +320,7 @@ void TileMap::RenderStructures(std::vector<CrossPoint>& nodeMap, std::vector<Ref
 			Renderer2D::DrawQuad(structure.position, standardTokenSize, m_BlueRoadRightUp);
 			break;
 		case StructureType::ROAD_VERTICAL:
-			Renderer2D::DrawQuad(structure.position, standardTokenSize, m_BlueHorizontalRoad); //needs to be vertical road when we get it
+			Renderer2D::DrawQuad(structure.position, standardTokenSize, m_BlueVerticalRoad); //needs to be vertical road when we get it
 		default:
 			CR_ASSERT(false, "Bad Structure Value on TileMap render");
 		}
