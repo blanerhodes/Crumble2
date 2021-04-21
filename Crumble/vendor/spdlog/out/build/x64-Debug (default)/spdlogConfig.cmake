@@ -49,7 +49,7 @@ unset(_expectedTargets)
 add_library(spdlog::spdlog INTERFACE IMPORTED)
 
 set_target_properties(spdlog::spdlog PROPERTIES
-  INTERFACE_INCLUDE_DIRECTORIES "C:/dev/Hazel/Hazel/vendor/spdlog/include"
+  INTERFACE_INCLUDE_DIRECTORIES "C:/Users/Jojo/Documents/git/Crumble2/Crumble/vendor/spdlog/include"
 )
 
 # This file does not depend on other imported targets which have

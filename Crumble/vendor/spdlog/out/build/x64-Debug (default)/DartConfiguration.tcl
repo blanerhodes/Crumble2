@@ -4,14 +4,14 @@
 
 
 # Configuration directories and files
-SourceDirectory: C:/dev/Hazel/Hazel/vendor/spdlog
-BuildDirectory: C:/dev/Hazel/Hazel/vendor/spdlog/out/build/x64-Debug (default)
+SourceDirectory: C:/Users/Jojo/Documents/git/Crumble2/Crumble/vendor/spdlog
+BuildDirectory: C:/Users/Jojo/Documents/git/Crumble2/Crumble/vendor/spdlog/out/build/x64-Debug (default)
 
 # Where to place the cost data store
 CostDataFile: 
 
 # Site is something like machine.domain, i.e. pragmatic.crd
-Site: DESKTOP-B99C356
+Site: DESKTOP-BPQNTN4
 
 # Build name is osname-revision-compiler, i.e. Linux-2.4.2-2smp-c++
 BuildName: Win32-ninja
@@ -26,7 +26,7 @@ SubmitURL: http://
 NightlyStartTime: 00:00:00 EDT
 
 # Commands for the build/test/submit cycle
-ConfigureCommand: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/cmake.exe" "C:/dev/Hazel/Hazel/vendor/spdlog"
+ConfigureCommand: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/cmake.exe" "C:/Users/Jojo/Documents/git/Crumble2/Crumble/vendor/spdlog"
 MakeCommand: "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --build . --config "${CTEST_CONFIGURATION_TYPE}"
 DefaultCTestConfigurationType: Release
 
@@ -57,13 +57,13 @@ P4UpdateOptions:
 P4UpdateCustom: 
 
 # Generic update command
-UpdateCommand: C:/Program Files/Git/cmd/git.exe
+UpdateCommand: 
 UpdateOptions: 
-UpdateType: git
+UpdateType: 
 
 # Compiler info
 Compiler: C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.28.29333/bin/Hostx64/x64/cl.exe
-CompilerVersion: 19.28.29336.0
+CompilerVersion: 19.28.29334.0
 
 # Dynamic analysis (MemCheck)
 PurifyCommand: 

@@ -70,12 +70,6 @@ void CardsLayer::OnRender(std::vector<Crumble::Ref<Player>>& m_Players)
 	float currX = -13.0f;
 	float currZ = 0.01;
 
-	// Render the Building Costs
-	auto& window = Application::Get().GetWindow();
-	float windowWidth = window.GetWidth();
-	float windowHeight = window.GetHeight();
-
-
 	Crumble::Ref<Crumble::Texture2D> m_p1_BrickAmount = m_Token0;
 	Crumble::Ref<Crumble::Texture2D> m_p1_StoneAmount = m_Token0;
 	Crumble::Ref<Crumble::Texture2D> m_p1_WoodAmount = m_Token0;

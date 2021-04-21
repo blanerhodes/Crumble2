@@ -137,6 +137,7 @@
   <ItemGroup>
     <ClInclude Include="src\CardsLayer.h" />
     <ClInclude Include="src\CrossPoint.h" />
+    <ClInclude Include="src\DiceAndScoreLayer.h" />
     <ClInclude Include="src\GameLayer.h" />
     <ClInclude Include="src\Player.h" />
     <ClInclude Include="src\Random.h" />
@@ -145,6 +146,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CardsLayer.cpp" />
+    <ClCompile Include="src\DiceAndScoreLayer.cpp" />
     <ClCompile Include="src\GameLayer.cpp" />
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\Random.cpp" />
