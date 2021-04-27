@@ -273,8 +273,6 @@ void TileMap::OnRender(std::vector<CrossPoint>& nodeMap)
 
 	Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, glm::vec2(40.0f), m_Checkerboard, 10.0f, glm::vec4(1.0f, 0.9f, 0.9f, 1.0f));
 
-	
-
 }
 
 
