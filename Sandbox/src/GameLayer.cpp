@@ -25,6 +25,8 @@ void GameLayer::OnAttach()
 	m_TileMap.Init();
 	// cards layer
 	m_CardsLayer.Init();
+	// dice and score layer
+	m_DiceAndScore.Init();
 
 }
 
@@ -59,19 +61,40 @@ void GameLayer::OnUpdate(Timestep ts)
 			CR_TRACE("CLICKED IN P1_SETTLEMENT");
 			HandleP1PlacementEvents(normX, normY, StructureType::SETTLEMENT);
 			break;
+		case ActiveFrame::P2_ROAD:
+			CR_TRACE("CLICKED IN P2_ROAD");
+			HandleP1PlacementEvents(normX, normY, StructureType::ROAD);
+			break;
+		case ActiveFrame::P2_CITY:
+			CR_TRACE("CLICKED IN P2_CITY");
+			HandleP1PlacementEvents(normX, normY, StructureType::CITY);
+			break;
+		case ActiveFrame::P2_SETTLEMENT:
+			CR_TRACE("CLICKED IN P2_SETTLEMENT");
+			HandleP1PlacementEvents(normX, normY, StructureType::SETTLEMENT);
+			break;
+		case ActiveFrame::DICE_ROLL:
+			CR_TRACE("CLICKED IN DICE_ROLL");
+			m_TileMap.GatherResources(m_Players, m_CurrentDiceRoll);
+			RollDiceEvent();
+
+			for (auto& resource : m_Players.at(0)->GetResources())
+			{
+				CR_TRACE("Resource Count: {0}", resource);
+			}
+			break;
+		case ActiveFrame::END_TURN:
+			// change players
+			if (m_CurrentPlayer == 0)
+				m_CurrentPlayer = 1;
+			else
+				m_CurrentPlayer = 0;
+			CR_TRACE("CLICKED END TURN");
+			break;
 		default:
 			CR_TRACE("CLICKED OUTSIDE OF MAP WINDOW");
 		}
-		m_TileMap.GatherResources(m_Players, m_CurrentDiceRoll);
-		for (auto& structure : m_Players.at(0)->GetStructures()) {
-			CR_TRACE("Mouse clicked at: x {0}, y {1}", normX, normY);
-			CR_TRACE("Building placed at: x {0}, y {1}", structure.position.x, structure.position.y);
-		}
 		
-		/*for (auto& resource : m_Players.at(0)->GetResources())
-		{
-			CR_TRACE("Resource Count: {0}", resource);
-		}*/
 		
 	}
 	m_MouseState = Input::IsMouseButtonReleased(CR_MOUSE_BUTTON_1);
@@ -86,6 +109,7 @@ void GameLayer::OnUpdate(Timestep ts)
 	m_TileMap.OnRender(m_NodeMap);
 	//card
 	m_CardsLayer.OnRender(m_Players);
+	m_DiceAndScore.OnRender(m_Players, m_DiceRoll1, m_DiceRoll2, m_CurrentPlayer);
 
 	//card
 	m_TileMap.RenderStructures(m_NodeMap, m_Players);
@@ -141,8 +165,20 @@ ActiveFrame GameLayer::GetActiveFrame(float x, float y)
 		return ActiveFrame::P1_SETTLEMENT;	
 	//if (x > m_Player1CardsFrame.r && x < m_Player1CardsFrame.g && y > m_Player1CardsFrame.b && y < m_Player1CardsFrame.a)
 		//return ActiveFrame::PLAYER1_CARDS;
-	if (x > m_Player2CardsFrame.r && x < m_Player2CardsFrame.g && y > m_Player2CardsFrame.b && y < m_Player2CardsFrame.a)
-		return ActiveFrame::PLAYER2_CARDS;
+	//if (x > m_Player2CardsFrame.r && x < m_Player2CardsFrame.g && y > m_Player2CardsFrame.b && y < m_Player2CardsFrame.a)
+		//return ActiveFrame::PLAYER2_CARDS;
+	if (x > m_Player2Road.r && x < m_Player2Road.g && y > m_Player2Road.b && y < m_Player2Road.a)
+		return ActiveFrame::P2_ROAD;
+	if (x > m_Player2City.r && x < m_Player2City.g && y > m_Player2City.b && y < m_Player2City.a)
+		return ActiveFrame::P2_CITY;
+	if (x > m_Player2Settlement.r && x < m_Player2Settlement.g && y > m_Player2Settlement.b && y < m_Player2Settlement.a)
+		return ActiveFrame::P2_SETTLEMENT;
+	if (x > m_DiceRollFrame.r && x < m_DiceRollFrame.g && y > m_DiceRollFrame.b && y < m_DiceRollFrame.a)
+		return ActiveFrame::DICE_ROLL;
+	if (x > m_EndTurnFrame.r && x < m_EndTurnFrame.g && y > m_EndTurnFrame.b && y < m_EndTurnFrame.a)
+		return ActiveFrame::END_TURN;
+
+	
 }
 
 void GameLayer::HandleMapEvents(float normX, float normY) 
@@ -150,6 +186,7 @@ void GameLayer::HandleMapEvents(float normX, float normY)
 	//CR_TRACE("Left: {0}, Right: {1}, Top: {2}, Bottom: {3}", m_Left, m_Right, m_Top, m_Bottom);
 	
 	//CR_TRACE("NormX: {0}, NormY: {1}", normX, normY);
+	//CR_TRACE("m_Selection: {0}", (int)m_Selection);
 
 	float sum = INT_MAX;
 	CrossPoint closest = m_NodeMap.at(0);
@@ -188,6 +225,7 @@ void GameLayer::HandleMapEvents(float normX, float normY)
 		structure.nearestCrossPoint = closest.position;
 		/*if(m_Selection == StructureType::SETTLEMENT)
 			m_Players.at(m_CurrentPlayer)->*/
+		m_Players.at(m_CurrentPlayer)->AddStructure(structure);
 	}
 	else if (m_Selection == StructureType::ROAD)
 	{
@@ -221,58 +259,81 @@ void GameLayer::HandleMapEvents(float normX, float normY)
 
 		}
 		structure.nearestCrossPoint = closest.position;
+		m_Players.at(m_CurrentPlayer)->AddStructure(structure);
 	}
 
-	m_Players.at(m_CurrentPlayer)->AddStructure(structure);
+	
+	m_Selection = StructureType::NONE;
 }
 
 void GameLayer::HandleP1PlacementEvents(float normX, float normY, StructureType structure)
 {
 	// take money from the gamers
 	int rec_amount[5];
-	for (int i = 0; i < 5; i++) rec_amount[i] = m_Players.at(0)->GetResources().at(i);
+	for (int i = 0; i < 5; i++) rec_amount[i] = m_Players.at(m_CurrentPlayer)->GetResources().at(i);
 
 	// BRICK, SHEEP, STONE, WHEAT, WOOD
+
 	switch (structure)
 	{
 	case StructureType::ROAD:
-		CR_TRACE("PLACING ROAD-- ");
-		for (int i = 0; i < 5; i++)
-		{
-			if (i == 0 && rec_amount[i] > 1)
-				m_Players.at(m_CurrentPlayer)->RemoveResource(Resource::BRICK, 1);
-			if(i == 4 && rec_amount[i] > 1)
-				m_Players.at(m_CurrentPlayer)->RemoveResource(Resource::WOOD, 1);
+
+		if (rec_amount[0] > 0 && rec_amount[4] > 0) { // 0 -> brick . 4 -> wood
+			CR_TRACE("PAID FOR ROAD");
+			m_Players.at(m_CurrentPlayer)->RemoveResource(Resource::BRICK, 1);
+			m_Players.at(m_CurrentPlayer)->RemoveResource(Resource::WOOD, 1);
+			m_Selection = StructureType::ROAD;
 		}
 		break;
 	case StructureType::CITY:
-		for (int i = 0; i < 5; i++)
-		{
-			if( i == 3 && rec_amount[i] > 2)
-				m_Players.at(m_CurrentPlayer)->RemoveResource(Resource::WHEAT, 2);
-			if(i == 2 && rec_amount[i] > 3)
-				m_Players.at(m_CurrentPlayer)->RemoveResource(Resource::STONE, 3);
+
+		if (rec_amount[3] > 1 && rec_amount[2] > 2) {
+			CR_TRACE("PAID FOR CITY");
+			m_Players.at(m_CurrentPlayer)->RemoveResource(Resource::WHEAT, 2);
+			m_Players.at(m_CurrentPlayer)->RemoveResource(Resource::STONE, 3);
+			m_Selection = StructureType::CITY;
+			m_Players.at(m_CurrentPlayer)->IncrementScore(2);
 		}
 		break;
 	case StructureType::SETTLEMENT:
-		for (int i = 0; i < 5; i++)
-		{
-			if(i == 0 && rec_amount[i] > 1)
-				m_Players.at(m_CurrentPlayer)->RemoveResource(Resource::BRICK, 1);
-			if (i == 4 && rec_amount[i] > 1) 
-				m_Players.at(m_CurrentPlayer)->RemoveResource(Resource::WOOD, 1);
-			if( i == 1 && rec_amount[i] > 1)
-				m_Players.at(m_CurrentPlayer)->RemoveResource(Resource::SHEEP, 1);
-			if( i == 3 && rec_amount[i] > 1)
-				m_Players.at(m_CurrentPlayer)->RemoveResource(Resource::WHEAT, 1);
+
+		if (rec_amount[0] > 0 && rec_amount[3] > 0 && rec_amount[1] > 0 && rec_amount[4] > 0) {
+			CR_TRACE("PAID FOR SETTLEMENT");
+			m_Players.at(m_CurrentPlayer)->RemoveResource(Resource::BRICK, 1);
+			m_Players.at(m_CurrentPlayer)->RemoveResource(Resource::WHEAT, 1);
+			m_Players.at(m_CurrentPlayer)->RemoveResource(Resource::SHEEP, 1);
+			m_Players.at(m_CurrentPlayer)->RemoveResource(Resource::WOOD, 1);
+			m_Selection = StructureType::SETTLEMENT;
+			m_Players.at(m_CurrentPlayer)->IncrementScore(1);
 		}
 		break;
 	}
 }
 
-void RollDiceEvent(float normX, float normY)
+void GameLayer::RollDiceEvent()
 {
+	// TESTING PURPOSES:
+	
+	m_Players.at(0)->AddResource(Resource::BRICK, 1);
+	m_Players.at(0)->AddResource(Resource::SHEEP, 1);
+	m_Players.at(0)->AddResource(Resource::STONE, 1);
+	m_Players.at(0)->AddResource(Resource::WHEAT, 1);
+	m_Players.at(0)->AddResource(Resource::WOOD, 1);
 
+	m_Players.at(1)->AddResource(Resource::BRICK, 1);
+	m_Players.at(1)->AddResource(Resource::SHEEP, 1);
+	m_Players.at(1)->AddResource(Resource::STONE, 1);
+	m_Players.at(1)->AddResource(Resource::WHEAT, 1);
+	m_Players.at(1)->AddResource(Resource::WOOD, 1);
+	
+
+	srand(time(NULL));
+	m_DiceRoll1 = rand() % 6;
+	m_DiceRoll2 = rand() % 6;
+	m_CurrentDiceRoll = m_DiceRoll1 + m_DiceRoll2 + 2;
+
+	CR_TRACE("Current Dice Roll: {0} {1}", m_DiceRoll1, m_DiceRoll2);
+	CR_TRACE("Current Total Dice Roll: {0}", m_CurrentDiceRoll);
 }
 
 void GameLayer::InitNodeMap(float xAnchor, float yAnchor)

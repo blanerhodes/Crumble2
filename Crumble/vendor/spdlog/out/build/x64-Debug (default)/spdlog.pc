@@ -1,4 +1,4 @@
-prefix=C:/dev/Hazel/Hazel/vendor/spdlog/out/install/x64-Debug (default)
+prefix=C:/Users/Jojo/Documents/git/Crumble2/Crumble/vendor/spdlog/out/install/x64-Debug (default)
 includedir=${prefix}/include
 
 Name: spdlog
