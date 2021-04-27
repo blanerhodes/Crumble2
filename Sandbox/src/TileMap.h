@@ -11,7 +11,7 @@ struct HexNode
 	glm::vec2 position;
 	uint8_t diceValue;
 
-	HexNode(Crumble::Ref<Crumble::Texture2D> tex, Resource rec = Resource::NONE, glm::vec2 pos = glm::vec2(1.0f),  uint8_t value = 0) : texture(tex), type(rec) {}
+	HexNode(Crumble::Ref<Crumble::Texture2D> tex, Resource rec = Resource::NONE, glm::vec2 pos = glm::vec2(1.0f),  uint8_t value = 0) : texture(tex), type(rec), position(pos), diceValue(value) {}
 };
 
 struct DiceValueNode

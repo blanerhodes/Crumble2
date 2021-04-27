@@ -273,6 +273,8 @@ void TileMap::OnRender(std::vector<CrossPoint>& nodeMap)
 
 	Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, glm::vec2(40.0f), m_Checkerboard, 10.0f, glm::vec4(1.0f, 0.9f, 0.9f, 1.0f));
 
+	
+
 }
 
 
@@ -329,8 +331,8 @@ void TileMap::RenderStructures(std::vector<CrossPoint>& nodeMap, std::vector<Ref
 
 void TileMap::GatherResources(std::vector<Crumble::Ref<Player>> players, uint32_t diceRoll)
 {
-	float tileOffsetX = 2.2f; //these are widened by 0.1
-	float tileOffsetY = 1.9f;
+	float tileOffsetX = 2.0f; //these are widened by 0.1
+	float tileOffsetY = 1.7f;
 	for (auto& player : players)
 	{
 		for (auto& building : player->GetStructures())
