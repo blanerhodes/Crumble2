@@ -63,11 +63,15 @@ void GameLayer::OnUpdate(Timestep ts)
 			CR_TRACE("CLICKED OUTSIDE OF MAP WINDOW");
 		}
 		m_TileMap.GatherResources(m_Players, m_CurrentDiceRoll);
+		for (auto& structure : m_Players.at(0)->GetStructures()) {
+			CR_TRACE("Mouse clicked at: x {0}, y {1}", normX, normY);
+			CR_TRACE("Building placed at: x {0}, y {1}", structure.position.x, structure.position.y);
+		}
 		
-			for (auto& resource : m_Players.at(0)->GetResources())
-			{
-				CR_TRACE("Resource Count: {0}", resource);
-			}
+		/*for (auto& resource : m_Players.at(0)->GetResources())
+		{
+			CR_TRACE("Resource Count: {0}", resource);
+		}*/
 		
 	}
 	m_MouseState = Input::IsMouseButtonReleased(CR_MOUSE_BUTTON_1);
@@ -87,6 +91,10 @@ void GameLayer::OnUpdate(Timestep ts)
 	m_TileMap.RenderStructures(m_NodeMap, m_Players);
 	Renderer2D::EndScene();
 
+	for (auto& node : m_NodeMap)
+	{
+		Renderer2D::DrawQuad(node.position, glm::vec3(0.5), m_Token2);
+	}
 }
 
 
@@ -167,9 +175,9 @@ void GameLayer::HandleMapEvents(float normX, float normY)
 	float leftNeighborYMidpoint = closest.position.y - (closest.position.y - closest.leftNeighbor.position.y) / 2;
 	if (m_Selection == StructureType::SETTLEMENT || m_Selection == StructureType::CITY)
 	{
-		if (normY > vertNeighborMidpoint)
+		if (normY > vertNeighborMidpoint && vertNeighborMidpoint > closest.position.y)
 			structure.position = closest.vertNeighbor.position;
-		else if (normX > rightNeighborXMidpoint)
+		else if (normX > rightNeighborXMidpoint && rightNeighborXMidpoint > closest.position.x)
 			structure.position = closest.rightNeighbor.position;
 		else if (normX < leftNeighborXMidpoint)
 			structure.position = closest.leftNeighbor.position;
@@ -354,4 +362,7 @@ void GameLayer::InitNodeMap(float xAnchor, float yAnchor)
 		currNode.rightNeighbor.position = (i == 3) ? glm::vec3(-17.0f) : glm::vec3({ currX + edgeXOffset, currY - edgeYOffset, z });
 		m_NodeMap.push_back(currNode);
 	}
+	
+	
+
 }

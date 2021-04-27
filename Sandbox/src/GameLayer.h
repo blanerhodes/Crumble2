@@ -63,5 +63,7 @@ private:
 
 	// random floats for now
 	glm::vec4 m_DiceRollFrame = glm::vec4({ 10.0f, 13.2f, 5.0f, 2.0f });
+
+	Crumble::Ref<Crumble::Texture2D> m_Token2 = Crumble::Texture2D::Create("assets/textures/Token2.png");
 	
 };
