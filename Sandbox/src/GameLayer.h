@@ -42,7 +42,7 @@ private:
 
 	std::vector<CrossPoint> m_NodeMap;
 	std::vector<Crumble::Ref<Player>> m_Players;
-	int m_CurrentPlayer = 0;
+	int m_CurrentPlayer = 1;
 	uint32_t m_DiceRoll1 = 0;
 	uint32_t m_DiceRoll2 = 0;
 	uint32_t m_CurrentDiceRoll = m_DiceRoll1 + m_DiceRoll2 + 2;
@@ -71,5 +71,8 @@ private:
 	glm::vec4 m_DiceRollFrame = glm::vec4({ 9.4f, 13.8f, 5.5f, 7.8f });
 
 	glm::vec4 m_EndTurnFrame = glm::vec4({ -1.5f, 1.5f, -7.9f, -6.0f });
+
+	// TESTING PURPOSES
+	//Crumble::Ref<Crumble::Texture2D> m_Token2;
 	
 };

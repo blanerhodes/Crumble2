@@ -18,6 +18,15 @@ GameLayer::GameLayer() : Layer("GameLayer")
 	Random::Init();
 	InitNodeMap(-6.0f, 6.5f);
 	CR_TRACE("NodeMap size: {0}", m_NodeMap.size());
+
+	for (auto& player: m_Players) {
+		player->AddResource(Resource::WOOD, 4);
+		player->AddResource(Resource::SHEEP, 2);
+		player->AddResource(Resource::WHEAT, 2);
+		player->AddResource(Resource::BRICK, 4);
+	}
+	// TESTING PURPOSES
+	//m_Token2 = Texture2D::Create("assets/textures/Token2.png");
 }
 
 void GameLayer::OnAttach()
@@ -75,9 +84,9 @@ void GameLayer::OnUpdate(Timestep ts)
 			break;
 		case ActiveFrame::DICE_ROLL:
 			CR_TRACE("CLICKED IN DICE_ROLL");
-			m_TileMap.GatherResources(m_Players, m_CurrentDiceRoll);
 			RollDiceEvent();
-
+			m_TileMap.GatherResources(m_Players, m_CurrentDiceRoll);
+			
 			for (auto& resource : m_Players.at(0)->GetResources())
 			{
 				CR_TRACE("Resource Count: {0}", resource);
@@ -118,6 +127,32 @@ void GameLayer::OnUpdate(Timestep ts)
 	/*for (auto& node : m_NodeMap)
 	{
 		Renderer2D::DrawQuad(node.position, glm::vec3(0.5), m_Token2);
+	}*/
+	
+	/*
+	TO SEE THE BOX AROUND A SETTLEMENT/BUILDING
+
+	float tileOffsetX = 2.0f / 1.6f; //these are widened by 0.1
+	float tileOffsetY = 1.7f / 1.3f;
+	for (auto& player : m_Players)
+	{
+		for (auto& building : player->GetStructures())
+		{
+			if (building.buildType == StructureType::SETTLEMENT || building.buildType == StructureType::CITY)
+			{
+				if (building.buildType == StructureType::CITY)
+					CR_TRACE("BUILDING TYPE CITY");
+				float negX = building.position.x - tileOffsetX;
+				float posX = building.position.x + tileOffsetX;
+				float negY = building.position.y - tileOffsetY;
+				float posY = building.position.y + tileOffsetY;
+
+				Renderer2D::DrawQuad({ negX, negY, 1 }, glm::vec3(0.5), m_Token2);
+				Renderer2D::DrawQuad({ negX, posY, 1 }, glm::vec3(0.5), m_Token2);
+				Renderer2D::DrawQuad({ posX, negY, 1 }, glm::vec3(0.5), m_Token2);
+				Renderer2D::DrawQuad({ posX, posY, 1 }, glm::vec3(0.5), m_Token2);
+			}
+		}
 	}*/
 }
 
@@ -313,7 +348,7 @@ void GameLayer::HandleP1PlacementEvents(float normX, float normY, StructureType 
 void GameLayer::RollDiceEvent()
 {
 	// TESTING PURPOSES:
-	
+	/*
 	m_Players.at(0)->AddResource(Resource::BRICK, 1);
 	m_Players.at(0)->AddResource(Resource::SHEEP, 1);
 	m_Players.at(0)->AddResource(Resource::STONE, 1);
@@ -325,7 +360,7 @@ void GameLayer::RollDiceEvent()
 	m_Players.at(1)->AddResource(Resource::STONE, 1);
 	m_Players.at(1)->AddResource(Resource::WHEAT, 1);
 	m_Players.at(1)->AddResource(Resource::WOOD, 1);
-	
+	*/
 
 	srand(time(NULL));
 	m_DiceRoll1 = rand() % 6;

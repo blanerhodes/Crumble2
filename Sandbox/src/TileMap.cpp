@@ -323,7 +323,9 @@ void TileMap::RenderStructures(std::vector<CrossPoint>& nodeMap, std::vector<Ref
 			break;
 		case StructureType::ROAD_VERTICAL:
 			Renderer2D::DrawQuad(structure.position, standardTokenSize, m_BlueVerticalRoad); //needs to be vertical road when we get it
+			break;
 		default:
+			CR_TRACE("ERROR: {0}", (int)structure.buildType);
 			CR_ASSERT(false, "Bad Structure Value on TileMap render");
 		}
 	}
@@ -331,8 +333,8 @@ void TileMap::RenderStructures(std::vector<CrossPoint>& nodeMap, std::vector<Ref
 
 void TileMap::GatherResources(std::vector<Crumble::Ref<Player>> players, uint32_t diceRoll)
 {
-	float tileOffsetX = 2.0f; //these are widened by 0.1
-	float tileOffsetY = 1.7f;
+	float tileOffsetX = 2.0f / 1.6f; //these are widened by 0.1
+	float tileOffsetY = 1.7f / 1.3f;
 	for (auto& player : players)
 	{
 		for (auto& building : player->GetStructures())
@@ -345,14 +347,16 @@ void TileMap::GatherResources(std::vector<Crumble::Ref<Player>> players, uint32_
 				float posX = building.position.x + tileOffsetX;
 				float negY = building.position.y - tileOffsetY;
 				float posY = building.position.y + tileOffsetY;
+
 				for (auto& resource : m_Tiles)
 				{
+					CR_TRACE("dice roll: {0} & type: {1}", resource.diceValue, (int)resource.type);
 					if(resource.position.x > negX && resource.position.x < posX && resource.position.y > negY && resource.position.y < posY && resource.diceValue == diceRoll && diceRoll != 7)
 					{
 						uint32_t resourceCount = (building.buildType == StructureType::CITY) ? 2 : 1;
-						CR_TRACE("BEFORE ADDING RESOURCE");
+						CR_TRACE("BEFORE ADDING RESOURCE, dice roll: {0} & type: {1}", resource.diceValue, (int)resource.type);
 						player->AddResource(resource.type, resourceCount);
-						CR_TRACE("AFTER ADDING RESOURCE");
+						CR_TRACE("AFTER ADDING RESOURCE, dice roll: {0} & type: {1}", resource.diceValue, (int)resource.type);
 					}
 				}
 			}

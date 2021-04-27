@@ -18,6 +18,7 @@ void Player::RemoveResource(Resource resource, uint32_t amount)
 		m_Resources.at(static_cast<int>(resource)) = 0;
 		return;
 	}
+	CR_TRACE("RESOURCE: {0}", (int)resource);
 	m_Resources.at(static_cast<int>(resource)) -= amount;
 }
 

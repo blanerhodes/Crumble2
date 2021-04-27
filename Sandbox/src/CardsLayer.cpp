@@ -97,14 +97,14 @@ void CardsLayer::OnRender(std::vector<Crumble::Ref<Player>>& m_Players)
 		if (i == 1) m_p1_SheepAmount = m_StoredTokens.at(rec_amount);
 		
 		int rec_amount_p2 = m_Players.at(1)->GetResources().at(i);
-		if (rec_amount_p2 > 10) rec_amount = 10;
-		if (rec_amount_p2 < 0) rec_amount = 0;
+		if (rec_amount_p2 > 10) rec_amount_p2 = 10;
+		if (rec_amount_p2 < 0) rec_amount_p2 = 0;
 
 		if (i == 0) m_p2_BrickAmount = m_StoredTokens.at(rec_amount_p2);
-		if (i == 0) m_p2_StoneAmount = m_StoredTokens.at(rec_amount_p2);
-		if (i == 0) m_p2_WoodAmount = m_StoredTokens.at(rec_amount_p2);
-		if (i == 0) m_p2_WheatAmount = m_StoredTokens.at(rec_amount_p2);
-		if (i == 0) m_p2_SheepAmount = m_StoredTokens.at(rec_amount_p2);
+		if (i == 2) m_p2_StoneAmount = m_StoredTokens.at(rec_amount_p2);
+		if (i == 4) m_p2_WoodAmount = m_StoredTokens.at(rec_amount_p2);
+		if (i == 3) m_p2_WheatAmount = m_StoredTokens.at(rec_amount_p2);
+		if (i == 1) m_p2_SheepAmount = m_StoredTokens.at(rec_amount_p2);
 	}
 	
 
