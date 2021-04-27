@@ -91,10 +91,10 @@ void GameLayer::OnUpdate(Timestep ts)
 	m_TileMap.RenderStructures(m_NodeMap, m_Players);
 	Renderer2D::EndScene();
 
-	for (auto& node : m_NodeMap)
+	/*for (auto& node : m_NodeMap)
 	{
 		Renderer2D::DrawQuad(node.position, glm::vec3(0.5), m_Token2);
-	}
+	}*/
 }
 
 

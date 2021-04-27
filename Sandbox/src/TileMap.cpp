@@ -122,7 +122,7 @@ void TileMap::OnRender(std::vector<CrossPoint>& nodeMap)
 	float currY = yStart;
 	float currZ = 0;
 	unsigned int row = 1;
-
+	Renderer2D::DrawQuad({ 0.0f, 0.0f, 0.0f }, glm::vec2(40.0f), m_Checkerboard, 10.0f, glm::vec4(1.0f, 0.9f, 0.9f, 1.0f));
 
 	//for (auto& node : nodeMap)
 	//{
@@ -271,7 +271,7 @@ void TileMap::OnRender(std::vector<CrossPoint>& nodeMap)
 		Renderer2D::DrawQuad({ currX, currY, currZ }, standardTileSize, m_WaterTile);
 	}
 
-	Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, glm::vec2(40.0f), m_Checkerboard, 10.0f, glm::vec4(1.0f, 0.9f, 0.9f, 1.0f));
+	
 
 	
 
