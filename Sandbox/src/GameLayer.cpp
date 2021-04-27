@@ -25,6 +25,7 @@ void GameLayer::OnAttach()
 	m_TileMap.Init();
 	// cards layer
 	m_CardsLayer.Init();
+	// dice and score layer
 	m_DiceAndScore.Init();
 
 }
@@ -83,6 +84,11 @@ void GameLayer::OnUpdate(Timestep ts)
 			}
 			break;
 		case ActiveFrame::END_TURN:
+			// change players
+			if (m_CurrentPlayer == 0)
+				m_CurrentPlayer = 1;
+			else
+				m_CurrentPlayer = 0;
 			CR_TRACE("CLICKED END TURN");
 			break;
 		default:
@@ -103,7 +109,7 @@ void GameLayer::OnUpdate(Timestep ts)
 	m_TileMap.OnRender(m_NodeMap);
 	//card
 	m_CardsLayer.OnRender(m_Players);
-	m_DiceAndScore.OnRender(m_Players, m_DiceRoll1, m_DiceRoll2);
+	m_DiceAndScore.OnRender(m_Players, m_DiceRoll1, m_DiceRoll2, m_CurrentPlayer);
 
 	//card
 	m_TileMap.RenderStructures(m_NodeMap, m_Players);
@@ -302,6 +308,21 @@ void GameLayer::HandleP1PlacementEvents(float normX, float normY, StructureType 
 
 void GameLayer::RollDiceEvent()
 {
+	// TESTING PURPOSES:
+	
+	m_Players.at(0)->AddResource(Resource::BRICK, 1);
+	m_Players.at(0)->AddResource(Resource::SHEEP, 1);
+	m_Players.at(0)->AddResource(Resource::STONE, 1);
+	m_Players.at(0)->AddResource(Resource::WHEAT, 1);
+	m_Players.at(0)->AddResource(Resource::WOOD, 1);
+
+	m_Players.at(1)->AddResource(Resource::BRICK, 1);
+	m_Players.at(1)->AddResource(Resource::SHEEP, 1);
+	m_Players.at(1)->AddResource(Resource::STONE, 1);
+	m_Players.at(1)->AddResource(Resource::WHEAT, 1);
+	m_Players.at(1)->AddResource(Resource::WOOD, 1);
+	
+
 	srand(time(NULL));
 	m_DiceRoll1 = rand() % 6;
 	m_DiceRoll2 = rand() % 6;

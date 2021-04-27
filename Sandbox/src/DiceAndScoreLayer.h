@@ -11,7 +11,7 @@ public:
 	virtual ~DiceAndScore() = default;
 
 	void Init();
-	void OnRender(std::vector<Crumble::Ref<Player>>& m_Players, uint32_t& m_DiceRoll1, uint32_t& m_DiceRoll2);
+	void OnRender(std::vector<Crumble::Ref<Player>>& m_Players, uint32_t& m_DiceRoll1, uint32_t& m_DiceRoll2, int m_CurrentPlayer);
 
 private:
 	Crumble::Ref<Crumble::Texture2D> m_Dice1Texture;
@@ -34,6 +34,8 @@ private:
 	Crumble::Ref<Crumble::Texture2D> m_Token10;
 
 	Crumble::Ref<Crumble::Texture2D> m_EndTurnButton;
+
+	Crumble::Ref<Crumble::Texture2D> m_ArrowPlayerIndicator;
 
 	// texture vector storing all tokens, index matching number of token
 	std::vector<Crumble::Ref<Crumble::Texture2D>> m_StoredTokens;

@@ -48,10 +48,11 @@ void DiceAndScore::Init()
 	m_StoredTokens.push_back(m_Token10);
 
 	m_EndTurnButton = Texture2D::Create("assets/textures/EndTurn.png");
+	m_ArrowPlayerIndicator = Texture2D::Create("assets/textures/ArrowPlayerIndicator.png");
 
 }
 
-void DiceAndScore::OnRender(std::vector<Crumble::Ref<Player>>& m_Players, uint32_t& m_DiceRoll1, uint32_t& m_DiceRoll2)
+void DiceAndScore::OnRender(std::vector<Crumble::Ref<Player>>& m_Players, uint32_t& m_DiceRoll1, uint32_t& m_DiceRoll2, int m_CurrentPlayer)
 {
 
 	glm::vec2 DieSize = glm::vec2(3.0f);
@@ -81,4 +82,10 @@ void DiceAndScore::OnRender(std::vector<Crumble::Ref<Player>>& m_Players, uint32
 
 	// Drawing the End Turn button
 	Renderer2D::DrawQuad({0.0f, -7.3f, 0.9f}, EndSize, m_EndTurnButton);
+
+	// Drawing the arrow for the current player:
+	if(m_CurrentPlayer == 0) // player 1
+		Renderer2D::DrawQuad({ -10.0f, -2.5f, 0.99f }, EndSize, m_ArrowPlayerIndicator);
+	else
+		Renderer2D::DrawQuad({ 10.0f, -2.5f, 0.99f }, EndSize, m_ArrowPlayerIndicator);
 }
