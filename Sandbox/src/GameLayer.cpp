@@ -260,7 +260,23 @@ void GameLayer::HandleMapEvents(float normX, float normY)
 		structure.nearestCrossPoint = closest.position;
 		/*if(m_Selection == StructureType::SETTLEMENT)
 			m_Players.at(m_CurrentPlayer)->*/
-		m_Players.at(m_CurrentPlayer)->AddStructure(structure);
+		if (m_Selection == StructureType::CITY)
+		{
+			glm::vec2 cityCP = { (int)closest.position.x, (int)closest.position.y };
+			for (auto& toReplace : m_Players.at(m_CurrentPlayer)->GetStructures())
+			{
+				glm::vec2 settlementCP = { (int)toReplace.nearestCrossPoint.x, (int)toReplace.nearestCrossPoint.y };
+				if (cityCP.x == settlementCP.x && cityCP.y == settlementCP.y)
+				{
+					toReplace.buildType = StructureType::CITY;
+				}
+			}
+		}
+		else
+		{
+			m_Players.at(m_CurrentPlayer)->AddStructure(structure);
+		}
+		
 	}
 	else if (m_Selection == StructureType::ROAD)
 	{
@@ -327,7 +343,7 @@ void GameLayer::HandleP1PlacementEvents(float normX, float normY, StructureType 
 			m_Players.at(m_CurrentPlayer)->RemoveResource(Resource::WHEAT, 2);
 			m_Players.at(m_CurrentPlayer)->RemoveResource(Resource::STONE, 3);
 			m_Selection = StructureType::CITY;
-			m_Players.at(m_CurrentPlayer)->IncrementScore(2);
+			m_Players.at(m_CurrentPlayer)->IncrementScore(1);
 		}
 		break;
 	case StructureType::SETTLEMENT:
